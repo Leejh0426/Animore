@@ -48,6 +48,7 @@ spring:
             #redirect-uri: http://localhost:8080/login/oauth2/code/kakao
 
 
+
           naver:
             client-id: HZl59ItB9qgvLI7S49iu
             client-secret: v6SemnBc8V
