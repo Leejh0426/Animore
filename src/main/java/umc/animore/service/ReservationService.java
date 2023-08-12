@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import umc.animore.config.exception.BaseException;
 import umc.animore.config.exception.BaseResponse;
 import umc.animore.model.*;
+import umc.animore.model.reservation.ReservationRequest;
 import umc.animore.repository.DTO.ReservationInfoMapping;
 import umc.animore.repository.ReservationRepository;
 import umc.animore.repository.UserRepository;
@@ -97,7 +98,7 @@ public class ReservationService {
                 }
             }
 
-            if (numOfReservations < 2) {
+            if (numOfReservations < store.getAmount()) {
                 availableTimes.add(nextHour);
             }
 
@@ -157,7 +158,7 @@ public class ReservationService {
             throw new IllegalArgumentException("reservationId is null");
         }
 
-        // 예약 기간 계산 (1시간) 수정할 수 있게 해줘야 함.
+        // 예약 기간 계산 (1시간)
         LocalDateTime endTime = startTime.plusHours(1);
 //
 //        // 겹치는 예약 확인 로직: 등록된 예약 중 겹치는 예약 반환
@@ -178,7 +179,7 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    /** 예약 수정 **/
+    /** 예약 수정 (시간수정)**/
     public Reservation updateReservation(Long reservationId, LocalDateTime startTime) {
         Reservation reservation = reservationRepository.findByReservationId(reservationId);
 
@@ -216,6 +217,21 @@ public class ReservationService {
 
     }
 
+    /** 요청사항 수정 **/
+    public Reservation modifyRequest(Long reservationId, Reservation.DogSize dogSize, Reservation.CutStyle cutStyle, Reservation.BathStyle bathStyle) {
+        Reservation reservation = reservationRepository.findByReservationId(reservationId);
+
+        if (reservation == null) {
+            throw new IllegalArgumentException("해당 예약이 존재하지 않습니다.");
+        }
+
+        reservation.setDogSize(dogSize);
+        reservation.setCutStyle(cutStyle);
+        reservation.setBathStyle(bathStyle);
+
+        return reservationRepository.save(reservation);
+
+    }
 
     /** 예약 삭제 **/
     public void deleteReservation(Long reservationId) {
@@ -227,7 +243,6 @@ public class ReservationService {
 
         reservationRepository.deleteById(reservationId);
 
-        System.out.println("예약 삭제 완료");
     }
 
 
