@@ -20,6 +20,7 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
+
   mail:
     host: smtp.gmail.com
     port: 465
@@ -42,8 +43,10 @@ spring:
             scope: profile_nickname,account_email,gender
             client-name: kakao
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: http://animore.co.kr/login/oauth2/code/kakao
             client-authentication-method: POST
+            #redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+
 
           naver:
             client-id: HZl59ItB9qgvLI7S49iu
@@ -51,19 +54,25 @@ spring:
             scope: id, nickname, name, email, gender
             client-name: naver
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            redirect-uri: http://animore.co.kr/login/oauth2/code/naver
             client-authentication-method: POST
+            #redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            #네이버 서비스 url을 animore.co.kr로 설정해서 local에서 작동 X
 
           facebook:
             client-id: 1221566275198331
             client-secret: 3a993ac29f1b49d46608417f16a52a13
             scope: public_profile, email
 
+           #페이스북 서비스 url을 animore.co.kr로 설정해서 local에서 작동 X
+
 
           google:
             client-id: 868335399925-2n7t9a1kgckmom5ai4b0rrhofm7a32e0.apps.googleusercontent.com
             client-secret: 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
             scope: profile, email
+
+            #animore , localhost 둘다 사용 가능
 
         provider:
           kakao:
@@ -81,4 +90,5 @@ spring:
 
 upload:
   path: \src\main\resources\templates\image\
+
 

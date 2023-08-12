@@ -6,6 +6,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import umc.animore.config.exception.BaseResponse;
 import umc.animore.model.User;
 import umc.animore.repository.UserRepository;
 
@@ -21,8 +22,8 @@ public class IndexController {
 
     @GetMapping("/")
     @ResponseBody
-    public String index(){
-        return "test";
+    public BaseResponse<String> Oauthreturn(@RequestParam String token){
+        return new BaseResponse<>(token);
     }
 
 
