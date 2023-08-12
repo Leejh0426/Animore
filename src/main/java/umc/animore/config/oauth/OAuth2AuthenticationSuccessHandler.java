@@ -33,9 +33,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .withClaim("username",principalDetails.getUser().getUsername())
                 .sign(Algorithm.HMAC512("cos"));
 
-        String targetUri = UriComponentsBuilder.fromUriString("/")
+        String targetUri = UriComponentsBuilder.fromUriString("https://animore.co.kr:8080/")
                 .queryParam("token", jwtToken)
                 .build().toUriString();
+
 
         response.addHeader("Authorization","Bearer " + jwtToken);
         getRedirectStrategy().sendRedirect(request,response,targetUri);
