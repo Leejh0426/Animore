@@ -149,7 +149,7 @@ public class MypageController {
             MypageProfile mypageProfile = MypageProfile.builder()
                     .nickname(user.getNickname())
                     .aboutMe(user.getAboutMe())
-                    .imageUrls("http://www.animore.co.kr/reviews/images/"+user.getImage().getImgName())
+                    .imageUrls("https://www.animore.co.kr/reviews/images/"+user.getImage().getImgName())
                     .build();
 
 

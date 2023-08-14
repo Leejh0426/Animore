@@ -43,7 +43,7 @@ spring:
             scope: profile_nickname,account_email,gender
             client-name: kakao
             authorization-grant-type: authorization_code
-            redirect-uri: https://animore.co.kr:8080/login/oauth2/code/kakao
+            redirect-uri: https://animore.co.kr/login/oauth2/code/kakao
             client-authentication-method: POST
             #redirect-uri: http://localhost:8080/login/oauth2/code/kakao
 
