@@ -3,10 +3,12 @@ package umc.animore.controller.DTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class MypageStoreUpdate {
 
@@ -42,5 +44,6 @@ public class MypageStoreUpdate {
         this.storeSignificant = storeSignificant;
         this.tags = tags;
     }
+
 }
 

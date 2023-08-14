@@ -46,11 +46,11 @@ public class StoreService {
             store.setStoreName(mypageStoreUpdate.getStoreName());
             store.setStoreImageUrl(mypageStoreUpdate.getStoreImageUrl());
             store.setStoreExplain(mypageStoreUpdate.getStoreExplain());
-            store.setOpen(TimeCalculation(mypageStoreUpdate.getOpen()));
-            store.setClose(TimeCalculation(mypageStoreUpdate.getClose()));
+            store.setOpen(HourToMin(mypageStoreUpdate.getOpen()));
+            store.setClose(HourToMin(mypageStoreUpdate.getClose()));
             store.setDayoff1(DateToEng(mypageStoreUpdate.getDayoff1()));
             store.setDayoff2(DateToEng(mypageStoreUpdate.getDayoff2()));
-            store.setStoreSignificant(DateToEng(mypageStoreUpdate.getStoreSignificant()));
+            store.setStoreSignificant(mypageStoreUpdate.getStoreSignificant());
             store.setAmount(AmountStringToInt(mypageStoreUpdate.getAmount()));
             store.setTags(mypageStoreUpdate.getTags());
             storeRepository.save(store);
@@ -70,9 +70,10 @@ public class StoreService {
     }
 
     //Time String -> int 변환
-    public int TimeCalculation(String Time){
+    public int HourToMin(String Time){
         int time = 0;
         String[] Hour = Time.split(":");
+        System.out.println(Hour);
         time += Integer.parseInt(Hour[0]) * 60;
         time += Integer.parseInt(Hour[1]);
         return time;
