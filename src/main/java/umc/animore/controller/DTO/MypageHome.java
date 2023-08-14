@@ -21,6 +21,8 @@ public class MypageHome {
 
     private int petAge;
 
+    private String profileImgUrl;
+
     /**
      * 중성화 0는 뭐 받아야함?
      */
@@ -33,12 +35,13 @@ public class MypageHome {
     private List<Map<Long, Object>> storeId_ImageUrl;
 
     @Builder
-    public MypageHome(String nickname, String petName, String petType, int petAge, List<Map<Long, Object>> storeId_ImageUrl) {
+    public MypageHome(String nickname, String petName, String petType, int petAge, List<Map<Long, Object>> storeId_ImageUrl, String proFileImgUrl) {
         this.nickname = nickname;
         this.petName = petName;
         this.petType = petType;
         this.petAge = petAge;
         this.storeId_ImageUrl = storeId_ImageUrl;
+        this.profileImgUrl = proFileImgUrl;
     }
 
 }

@@ -73,14 +73,13 @@ public class MypageController {
                 throw new BaseException(GET_PET_EMPTY_ERROR);
             }
 
+
             
             List<ReservationInfoMapping> reservationInfoMappings = reservationService.findByUserIdOrderByStartTimeDesc(userId);
-
-
-
             List<Map<Long, Object>> storeId_ImageUrl = imageService.findImageByReservationId(reservationInfoMappings);
 
 
+            Image img = imageService.findImageByUserId(userId);
 
             MypageHome mypageHome = MypageHome.builder()
                     .nickname(pet.getUser().getNickname())
@@ -88,6 +87,7 @@ public class MypageController {
                     .petAge(pet.getPetAge())
                     .petType(pet.getPetType())
                     .storeId_ImageUrl(storeId_ImageUrl)
+                    .proFileImgUrl("http://www.animore.co.kr/reviews/images/"+img.getImgName())
                     .build();
 
 
