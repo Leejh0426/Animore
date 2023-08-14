@@ -56,7 +56,7 @@ spring:
             client-name: naver
             authorization-grant-type: authorization_code
             redirect-uri: https://animore.co.kr/login/oauth2/code/naver
-            client-authentication-method: POST
+            client-authentication-method: GET
             #redirect-uri: http://localhost:8080/login/oauth2/code/naver
             #네이버 서비스 url을 animore.co.kr로 설정해서 local에서 작동 X
 
