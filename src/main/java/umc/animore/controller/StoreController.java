@@ -55,6 +55,12 @@ public class StoreController {
             MypageStoreUpdate.setStoreSignificant(store.getStoreSignificant());
             MypageStoreUpdate.setTags(store.getTags());
 
+            MypageStoreUpdate.setStoreLocation(store.getStoreLocation());
+            MypageStoreUpdate.setStoreNumber(store.getStoreNumber());
+            MypageStoreUpdate.setLatitude(store.getLatitude());
+            MypageStoreUpdate.setLongitude(store.getLongitude());
+            MypageStoreUpdate.setTown(store.getTown());
+
             return new BaseResponse<>(MypageStoreUpdate);
 
         } catch (Exception exception) {

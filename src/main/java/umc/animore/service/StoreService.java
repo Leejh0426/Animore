@@ -8,11 +8,14 @@ import umc.animore.config.exception.BaseException;
 import umc.animore.controller.DTO.MypageMemberUpdate;
 import umc.animore.controller.DTO.MypageStoreUpdate;
 import umc.animore.model.Store;
+import umc.animore.model.Town;
 import umc.animore.model.User;
 import umc.animore.model.review.StoreDTO;
 import umc.animore.repository.StoreRepository;
+import umc.animore.repository.TownRepository;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import static umc.animore.config.exception.BaseResponseStatus.*;
 
@@ -22,9 +25,13 @@ public class StoreService {
     @Autowired
     private StoreRepository storeRepository;
 
+    @Autowired
+    private TownRepository townRepository;
 
-    public StoreService(StoreRepository storeRepository){
+
+    public StoreService(StoreRepository storeRepository, TownRepository townRepository){
         this.storeRepository = storeRepository;
+        this.townRepository = townRepository;
 
     }
     public Store findStoreId(Long storeId) {
@@ -40,7 +47,6 @@ public class StoreService {
                 throw new BaseException(GET_USER_EMPTY_NICKNAME_NAME);
             }
 
-
             Store store = storeRepository.findByStoreId(storeId);
 
             store.setStoreName(mypageStoreUpdate.getStoreName());
@@ -53,6 +59,27 @@ public class StoreService {
             store.setStoreSignificant(mypageStoreUpdate.getStoreSignificant());
             store.setAmount(AmountStringToInt(mypageStoreUpdate.getAmount()));
             store.setTags(mypageStoreUpdate.getTags());
+
+            store.setStoreLocation(mypageStoreUpdate.getStoreLocation());
+            store.setStoreNumber(mypageStoreUpdate.getStoreNumber());
+            store.setLatitude(mypageStoreUpdate.getLatitude());
+            store.setLongitude(mypageStoreUpdate.getLongitude());
+
+            String address = mypageStoreUpdate.getStoreLocation();
+            String[] addressParts = address.split(" ");
+            String city = addressParts[0];
+            String district = addressParts[1];
+
+            Optional<Town> townOptional = townRepository.findByCityContainingAndDistrict(city, district);
+
+            if (townOptional.isPresent()){
+                Town town = townOptional.get();
+
+                store.setTown(town);
+            } else{
+                store.setTown(null);
+            }
+
             storeRepository.save(store);
 
             return mypageStoreUpdate;
