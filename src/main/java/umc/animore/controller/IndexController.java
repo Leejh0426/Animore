@@ -26,6 +26,11 @@ public class IndexController {
         return new BaseResponse<>(token);
     }
 
+    @GetMapping("/jenkins")
+    @ResponseBody
+    public String jenkinstest() {
+        return "jenkins test";
+    }
 
     @GetMapping("/loginForm")
     public String loginForm(){
