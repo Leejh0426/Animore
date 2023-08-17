@@ -10,6 +10,7 @@ import umc.animore.config.exception.BaseResponseStatus;
 import umc.animore.controller.DTO.MypageMemberUpdate;
 import umc.animore.controller.DTO.MypageStoreUpdate;
 import umc.animore.model.Store;
+import umc.animore.model.Town;
 import umc.animore.model.User;
 import umc.animore.model.review.StoreDTO;
 import umc.animore.service.StoreService;
@@ -59,7 +60,7 @@ public class StoreController {
             MypageStoreUpdate.setStoreNumber(store.getStoreNumber());
             MypageStoreUpdate.setLatitude(store.getLatitude());
             MypageStoreUpdate.setLongitude(store.getLongitude());
-            MypageStoreUpdate.setTown(store.getTown());
+            MypageStoreUpdate.setTownId(store.getTown().getTownId());
 
             return new BaseResponse<>(MypageStoreUpdate);
 

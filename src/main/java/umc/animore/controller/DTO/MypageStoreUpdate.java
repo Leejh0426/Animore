@@ -1,5 +1,6 @@
 package umc.animore.controller.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,10 +37,10 @@ public class MypageStoreUpdate {
     private String storeNumber; // 업체 번호
     private double latitude; //위도
     private double longitude; //경도
-    private Town town;//도시 id
+    private Long townId;//도시 id
 
 
-    public MypageStoreUpdate(String storeName, String storeExplain, String storeImageUrl, String open, String close, String dayoff1, String dayoff2, String amount, String storeSignificant, List<String> tags,String storeLocation, String storeNumber, double latitude, double longitude, Town town) {
+    public MypageStoreUpdate(String storeName, String storeExplain, String storeImageUrl, String open, String close, String dayoff1, String dayoff2, String amount, String storeSignificant, List<String> tags,String storeLocation, String storeNumber, double latitude, double longitude, Long townId) {
         this.storeName = storeName;
         this.storeExplain = storeExplain;
         this.storeImageUrl = storeImageUrl;
@@ -54,7 +55,7 @@ public class MypageStoreUpdate {
         this.storeNumber=storeNumber;
         this.latitude=latitude;
         this.longitude=longitude;
-        this.town=town;
+        this.townId=townId;
     }
 
 }

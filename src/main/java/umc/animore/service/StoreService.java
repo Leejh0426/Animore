@@ -74,13 +74,16 @@ public class StoreService {
 
             if (townOptional.isPresent()){
                 Town town = townOptional.get();
-
                 store.setTown(town);
-            } else{
+            }
+            else{
                 store.setTown(null);
             }
 
+
             storeRepository.save(store);
+
+            mypageStoreUpdate.setTownId(store.getTown().getTownId());
 
             return mypageStoreUpdate;
         }
