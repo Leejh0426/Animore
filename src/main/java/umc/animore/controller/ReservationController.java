@@ -490,8 +490,18 @@ public class ReservationController {
     @GetMapping("/sendEmail")
     public void sendEmail(String emailto) {
         String to = emailto;
-        String subject = "테스트 메일 제목2";
-        String text = "테스트 메일 내용2";
+        String storeName = "샘플 가게"; // 테스트를 위해 샘플 가게 이름 설정
+        String startTime = "8월 18일 18시"; // 테스트를 위해 샘플 시작 시간 설정
+        String address = "서울특별시 강남구 테헤란로 123-45"; // 테스트를 위해 샘플 주소 설정
+        String petType = "강아지";
+        String cutStyle = "미용";
+        String bathStyle = "목욕";
+
+        String subject = "[Animore] 방문 당일 안내";
+        String text = String.format(
+                "안녕하세요 회원님! 오늘은 %s 예약당일입니다.\n\n 🔻예약시간 : %s\n 🔻 주소 : %s\n 🔻 옵션 : %s, %s, %s",
+                storeName, startTime, address, petType, cutStyle, bathStyle
+        );
 
         emailService.sendEmail(to, subject, text);
     }

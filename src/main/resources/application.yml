@@ -24,8 +24,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 465
-    username: myeongcheol81@gmail.com
-    password: beftemtwqpmvzhhh
+    username: animore604@gmail.com
+    password: phqadviwiluubqkc
     properties:
       mail.smtp.auth: true
       mail.smtp.ssl.enable: true
@@ -64,6 +64,7 @@ spring:
             client-id: 1221566275198331
             client-secret: 3a993ac29f1b49d46608417f16a52a13
             scope: public_profile, email
+            redirect-uri: https://animore.co.kr/login/oauth2/code/facebook
 
            #페이스북 서비스 url을 animore.co.kr로 설정해서 local에서 작동 X
 
