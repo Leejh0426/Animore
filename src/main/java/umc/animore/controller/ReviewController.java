@@ -681,6 +681,7 @@ public class ReviewController {
             storeDTO.setDayoff1(store.getDayoff1());
             storeDTO.setDayoff2(store.getDayoff2());
             storeDTO.setTags(store.getTags());
+            storeDTO.setStoreSignificant(store.getStoreSignificant()); //초록 해시태그
 
             reservationResultDTO.setStoreDTO(storeDTO);
 

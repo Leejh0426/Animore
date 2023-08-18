@@ -104,6 +104,7 @@ public class SearchController {
             storeDTO.setDayoff1(store.getDayoff1());
             storeDTO.setDayoff2(store.getDayoff2());
             storeDTO.setTags(store.getTags());
+            storeDTO.setStoreSignificant(store.getStoreSignificant());
 
             storeDTOList.add(storeDTO);
         }
@@ -676,6 +677,7 @@ public class SearchController {
             storeDTO.setDayoff1(store.getDayoff1());
             storeDTO.setDayoff2(store.getDayoff2());
             storeDTO.setTags(store.getTags());
+            storeDTO.setStoreSignificant(store.getStoreSignificant());
 
             return new BaseResponse<>(storeDTO);
         } catch (Exception exception) {
@@ -725,6 +727,7 @@ public class SearchController {
                 storeDTO.setDayoff1(store.getDayoff1());
                 storeDTO.setDayoff2(store.getDayoff2());
                 storeDTO.setTags(store.getTags());
+                storeDTO.setStoreSignificant(store.getStoreSignificant());
 
                 recordDTO.setStoreDTO(storeDTO);
                 recordDTOList.add(recordDTO);

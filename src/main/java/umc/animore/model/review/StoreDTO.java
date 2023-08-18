@@ -34,6 +34,7 @@ public class StoreDTO {
     private String dayoff1;
     private String dayoff2;
     private List<String> tags;
+    private String storeSignificant;
 
 }
 
