@@ -59,6 +59,9 @@ public class Reservation {
     @ColumnDefault("false")
     private boolean confirmed;      // 예약 확정 여부
 
+    @ColumnDefault("false")
+    private boolean emailSent;      // 이메일 전송 여부
+
 
 
     private String cause;           // 예약 반려 사유

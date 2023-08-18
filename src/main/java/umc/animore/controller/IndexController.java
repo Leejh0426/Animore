@@ -3,13 +3,18 @@ package umc.animore.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import umc.animore.config.auth.PrincipalDetails;
 import umc.animore.config.exception.BaseException;
 import umc.animore.config.exception.BaseResponse;
+import umc.animore.controller.DTO.SignUpInfo;
+import umc.animore.model.Pet;
 import umc.animore.model.User;
 import umc.animore.repository.UserRepository;
+import umc.animore.service.PetService;
 import umc.animore.service.UserService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +34,9 @@ public class IndexController {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private PetService petService;
 
     @GetMapping("/")
     @ResponseBody
@@ -69,6 +77,58 @@ public class IndexController {
 
     }
 
+    // 추가회원가입
+    @PostMapping("/signup")
+    @ResponseBody
+    public BaseResponse<?> signupForm(@RequestBody SignUpInfo signUpInfo) {
+
+        PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = principalDetails.getUser();
+        Pet pet = new Pet();
+        pet.setUser(user);
+
+
+        if (signUpInfo.getPassword().isEmpty()) {
+            return new BaseResponse<>(PASSWORD_EMPTY_ERROR);
+        }
+
+        try {
+
+            if (4 >  signUpInfo.getPassword().length() || signUpInfo.getPassword().length() > 16) {
+                return new BaseResponse<>(PASSWORD_INPUT_ERROR);
+            }
+
+            if (signUpInfo.getAddress().isEmpty()) {
+                return new BaseResponse<>(ADDRESS_INPUT_ERROR);
+            } else if(signUpInfo.getPetname().isEmpty()) {
+                return new BaseResponse<>(PETNAME_INPUT_ERROR);
+            } else if (signUpInfo.getPettype().isEmpty()) {
+                return new BaseResponse<>(PETTYPE_INPUT_ERROR);
+            } else if (signUpInfo.getNickname().isEmpty()) {
+                return new BaseResponse<>(NICKNAME_INPUT_ERROR);
+            } else if (signUpInfo.getPhone().isEmpty()) {
+                return new BaseResponse<>(PHONE_INPUT_ERROR);
+            }
+
+
+            if (!signUpInfo.getBirth().isEmpty()) {user.setBirthday(signUpInfo.getBirth());}
+            if (!signUpInfo.getSpecials().isEmpty()) {pet.setPetSpecials(signUpInfo.getSpecials());}
+            if (signUpInfo.getPetWeight() != 0.0) {pet.setPetWeight(pet.getPetWeight());}
+            if (signUpInfo.getAge() != 0) {pet.setPetAge(signUpInfo.getAge());}
+            petService.save(pet);
+
+            user.setRole("ROLE_USER");
+
+            String rawPassword = signUpInfo.getPassword();
+            String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+            user.setPassword(encPassword);
+            userService.save(user);
+            userService.singupForm(user.getId(), signUpInfo.getAddress(), signUpInfo.getPetname(), signUpInfo.getPettype(), signUpInfo.getPetgender(), signUpInfo.getNickname(), signUpInfo.getPhone());
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 
 
     @GetMapping("/jenkins")

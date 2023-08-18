@@ -14,8 +14,7 @@ import umc.animore.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-import static umc.animore.config.exception.BaseResponseStatus.GET_PET_EMPTY_ERROR;
-import static umc.animore.config.exception.BaseResponseStatus.RESPONSE_ERROR;
+import static umc.animore.config.exception.BaseResponseStatus.*;
 
 @Service
 public class PetService {
@@ -153,4 +152,14 @@ public class PetService {
         }
 
     }
+
+    @Transactional
+    public void save(Pet pet) throws BaseException{
+        try{
+            petRepository.save(pet);
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }

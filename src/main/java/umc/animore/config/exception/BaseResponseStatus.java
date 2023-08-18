@@ -25,6 +25,13 @@ public enum BaseResponseStatus { //열거 상수를 통해 응답상태를 나�
     GET_USER_PASSWORD_ERROR(false, 2010, "비밀번호가 일치하지 않습니다"),
     GET_USER_EMPTY_USERNAME(false, 2011, "user의 아이디를 입력하지 않았습니다."),
     GET_USER_EMPTY_PASSWORD(false, 2012, "user의 비밀번호를 입력하지 않았습니다."),
+    PASSWORD_INPUT_ERROR(false, 2100, "영문 대소문자/숫자/특수문자 조합, 4 ~ 16자가 아닙니다."),
+    ADDRESS_INPUT_ERROR(false, 2101, "주소를 입력해 주세요."),
+    PETNAME_INPUT_ERROR(false, 2102, "반려동물 이름을 입력해 주세요."),
+    PETTYPE_INPUT_ERROR(false, 2103, "반려동물 종류를 선택해 주세요."),
+    PASSWORD_EMPTY_ERROR(false, 2104, "비밀번호를 입력해 주세요"),
+    NICKNAME_INPUT_ERROR(false, 2105, "닉네임을 입력해 주세요"),
+    PHONE_INPUT_ERROR(false, 2106, "번호를 입력해 주세요"),
 
 
 

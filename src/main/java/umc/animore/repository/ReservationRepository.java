@@ -26,7 +26,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findReservationsBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     // 예약 알람
-    List<Reservation> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
+    List<Reservation> findByStartTimeBetweenAndEmailSent(LocalDateTime start, LocalDateTime end, boolean emailSent);
 
     // store의 예약 목록
     List<Reservation> findByStoreAndStartTimeBetweenOrderByStartTime(Store store, LocalDateTime startOfMonth, LocalDateTime endOfMonth);
@@ -51,5 +51,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     //해당 가게의 예약횟수 조회
     @Query("SELECT COUNT(r) FROM Reservation r WHERE r.startTime >= :twoWeeksAgo GROUP BY r.store ORDER BY COUNT(r) DESC")
     Integer findStoreWithHighestReservationCount(@Param("twoWeeksAgo") LocalDateTime twoWeeksAgo);
+
 
 }

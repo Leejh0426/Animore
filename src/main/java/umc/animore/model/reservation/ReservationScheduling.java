@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import umc.animore.model.Reservation;
 import umc.animore.repository.ReservationRepository;
 import umc.animore.service.EmailService;
+import umc.animore.service.ReservationService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,12 +21,14 @@ public class ReservationScheduling {
     private ReservationRepository reservationRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private ReservationService reservationService;
 
     @Scheduled(fixedDelay = 60 * 30 * 1000)
     public void checkReservations() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime end = now.plusMinutes(120);
-        List<Reservation> reservations = reservationRepository.findByStartTimeBetween(now, end);
+        List<Reservation> reservations = reservationRepository.findByStartTimeBetweenAndEmailSent(now, end, false);
 
         for (Reservation r: reservations) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 HH시");
@@ -41,6 +44,7 @@ public class ReservationScheduling {
             );
 
             emailService.sendEmail(r.getUser().getEmail(), "[Animore] 방문 당일 안내", emailContent);
+            reservationService.setEmailSent(r.getReservationId());
         }
     }
 }

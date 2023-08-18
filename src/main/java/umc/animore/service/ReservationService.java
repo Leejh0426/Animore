@@ -340,4 +340,10 @@ public class ReservationService {
         return reservationRepository.findByUser_IdOrderByStartTimeDesc(userId);
     }
 
+    public void setEmailSent(Long reservationId) {
+        Reservation reservation = reservationRepository.findByReservationId(reservationId);
+        reservation.setEmailSent(true);
+        reservationRepository.save(reservation);
+    }
+
 }

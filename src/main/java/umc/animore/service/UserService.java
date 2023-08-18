@@ -9,6 +9,7 @@ import umc.animore.controller.DTO.MypageMemberUpdate;
 import umc.animore.controller.DTO.MypageProfile;
 import umc.animore.model.Pet;
 import umc.animore.model.User;
+import umc.animore.repository.PetRepository;
 import umc.animore.repository.UserRepository;
 
 import java.util.HashMap;
@@ -22,6 +23,8 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private PetService petService;
+    @Autowired
+    private PetRepository petRepository;
 
     @Transactional
     public User getUserId(Long userId) throws BaseException{
@@ -148,6 +151,28 @@ public class UserService {
         return user;
     }
 
+    public User singupForm (Long userId,String address, String petname, String pettype, String petgender, String nickname, String phone) {
+        User user = userRepository.findById(userId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("해당 유저를 찾지 못했습니다");
+        }
+        Pet pet = petService.getPetInfo(user);
+
+        if (pet == null) {
+            throw new IllegalArgumentException("해당 유저의 펫 정보를 찾지 못했습니다.");
+        }
+
+        user.setAddress(address);
+        user.setNickname(nickname);
+        user.setPhone(phone);
+        pet.setUser(user);
+        pet.setPetName(petname);
+        pet.setPetType(pettype);
+        pet.setPetGender(petgender);
+        petRepository.save(pet);
+        return userRepository.save(user);
+    }
 
 
 }
