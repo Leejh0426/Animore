@@ -14,6 +14,6 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
     List<Store> findByTagsIn(List<String> tags);
 
 
-    List<Store> findByStoreSignificantIn(List<String> storeSignificant);
+//    List<Store> findByStoreSignificantIn(List<String> storeSignificant);
 }
 
