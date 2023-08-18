@@ -581,7 +581,7 @@ public class SearchService {
     //태그편집으로 가게찾음
     public List<Store> searchStoresBySignificantIn(List<String> storeSignificant) throws BaseException{
         try{
-            List<Store> store = searchRespository.findByStoreSignificantIn(storeSignificant);
+            List<Store> store = storeRepository.findByStoreSignificantIn(storeSignificant);
             return store;
         }catch (Exception exception){
             throw new BaseException(RESPONSE_ERROR);
@@ -589,7 +589,7 @@ public class SearchService {
 
     }
 
-    //해시태그 인기순
+    //태그 인기순
     public List<Store> searchstoreSignificantBest(List<String> storeSignificant) throws BaseException {
         try {
 
@@ -600,7 +600,7 @@ public class SearchService {
         }
     }
 
-    //해시태그 후기 많은 순
+    //태그 후기 많은 순
     public List<Store> searchstoreSignificantMostReviews(List<String> storeSignificant) throws BaseException {
         try {
             List<Store> store = searchRespository.findStoresWithMostReviewsByStoreSignificantIn(storeSignificant);
@@ -610,7 +610,7 @@ public class SearchService {
         }
     }
 
-    //해시태그 후기별점 평균 순
+    //태그 후기별점 평균 순
     public List<Store> searchstoreSignificantReviewsAvg(List<String> storeSignificant) throws BaseException {
         try {
             List<Store> store = searchRespository.findStoresWithHighestAverageScoreByStoreSignificantIn(storeSignificant);
@@ -621,7 +621,7 @@ public class SearchService {
     }
 
 
-    //해시태그 거리순
+    //태그 거리순
     public List<Store> recommendNeareststoreSignificant(List<String> storeSignificant) throws BaseException {
         try {
             Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
@@ -634,7 +634,7 @@ public class SearchService {
                 double minDistance = Double.MAX_VALUE;
 
                 for (Store store : allStores) {
-                    if (store.getTags().containsAll(storeSignificant)) {
+                    if (store.getStoreSignificant().containsAll(storeSignificant)) {
                         // 가게와 현재 위치 간의 거리 계산
                         double distance = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
                                 store.getLatitude(), store.getLongitude());

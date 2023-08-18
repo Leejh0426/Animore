@@ -75,7 +75,7 @@ public interface SearchRespository extends JpaRepository<Store, Long> {
     @Query("SELECT r.store, AVG(r.reviewLike) as avgScore FROM Review r JOIN r.store.tags t WHERE t IN :tags GROUP BY r.store ORDER BY avgScore DESC")
     List<Store> findStoresWithHighestAverageScoreByTagsIn(List<String> tags);
 
-    List<Store> findByStoreSignificantIn(List<String> storeSignificant);
+
 
     //태그편집 인기순
     List<Store> findByStoreSignificantInOrderByStoreLikeDesc(List<String> storeSignificant);
