@@ -35,7 +35,7 @@ public class ReservationScheduling {
                     r.getStore().getStoreName(),
                     startTimeFormatted,
                     r.getAddress(),
-                    r.getPet_type(),
+                    r.getDogSize(),
                     r.getCutStyle(),
                     r.getBathStyle()
             );
