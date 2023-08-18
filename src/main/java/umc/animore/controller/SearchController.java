@@ -740,7 +740,7 @@ public class SearchController {
     }
 
     //해시태그
-    // GET /search/hashtags?tags=픽업가능,스파가능,피부병치료
+    // GET /search/hashtags?tags=포메라니안,가위컷 전문, 베넷미용
     @ResponseBody
     @GetMapping("/search/hashtags")
     public BaseResponse<List<StoreDTO>> searchStoresByHashtags(@RequestParam List<String> tags) {
@@ -773,7 +773,7 @@ public class SearchController {
 
 
     //해시태그- 인기순
-    // GET /search/hashtags/best?tags=픽업가능,스파가능,피부병치료
+    // GET /search/hashtags/best?tags=포메라니안,가위컷 전문, 베넷미용
     @ResponseBody
     @GetMapping("/search/hashtags/best")
     public BaseResponse<List<StoreDTO>> searchBestByHashTags(@RequestParam List<String> tags) {
@@ -805,7 +805,7 @@ public class SearchController {
     }
 
     //해시태그- 후기 많은 순
-    // GET /search/hashtags/top_review?tags=픽업가능,스파가능,피부병치료
+    // GET /search/hashtags/top_review?tags=포메라니안,가위컷 전문, 베넷미용
     @ResponseBody
     @GetMapping("/search/hashtags/top_reviews")
     public BaseResponse<List<StoreDTO>> searchHashTagsMostReviews(@RequestParam List<String> tags) {
@@ -837,7 +837,7 @@ public class SearchController {
     }
 
     //해시태그- 후기별점 평균 순
-    // GET /search/hashtags/avg?tags=픽업가능,스파가능,피부병치료
+    // GET /search/hashtags/avg?tags=포메라니안,가위컷 전문, 베넷미용
     @ResponseBody
     @GetMapping("/search/hashtags/avg")
     public BaseResponse<List<StoreDTO>> searchReviewsAvgByHashtags(@RequestParam List<String> tags) {
@@ -869,7 +869,7 @@ public class SearchController {
     }
 
     //해시태그- 거리순
-    // GET /search/hashtags/recommend?tags=픽업가능,스파가능,피부병치료
+    // GET /search/hashtags/recommend?tags=포메라니안,가위컷 전문, 베넷미용
     @ResponseBody
     @GetMapping("/search/hashtags/recommend")
     public BaseResponse<List<StoreDTO>> searchByHashTagsRecommend(@RequestParam List<String> tags) {
@@ -884,6 +884,166 @@ public class SearchController {
 
             String hashtags = String.join(",", tags);
             searchService.postSearchHistory(user, hashtags);
+            if (store.isEmpty()) {
+                // 반환값이 없다
+                return new BaseResponse<>(DATABASE_ERROR);
+            }
+            List<StoreDTO> resultStore = convertStoreToDTO(store);
+            return new BaseResponse<>(resultStore);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+
+
+    //태그편집
+    // GET /search/tags?=픽업가능, 고양이 미용
+    @ResponseBody
+    @GetMapping("/search/tags")
+    public BaseResponse<List<StoreDTO>> searchStoresBystoreSignificant(@RequestParam List<String> storeSignificant) {
+        try {
+            if (storeSignificant == null || storeSignificant.isEmpty()) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalDetails.getUser().getId();
+            User user = userRepository.findById(userId);
+            List<Store> store = searchService.searchStoresBySignificantIn(storeSignificant);
+
+            // 중복된 가게 제거
+            Set<Store> uniqueStores = new HashSet<>(store);
+            List<Store> uniqueStoreList = new ArrayList<>(uniqueStores);
+
+            String tags = String.join(",", storeSignificant);
+            searchService.postSearchHistory(user, tags);
+            if (uniqueStoreList.isEmpty()) {
+                // 반환값이 없다
+                return new BaseResponse<>(DATABASE_ERROR);
+            }
+            List<StoreDTO> resultStore = convertStoreToDTO(uniqueStoreList);
+            return new BaseResponse<>(resultStore);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+    //태그편집- 인기순
+    // GET /search/tags/best?storeSignificant=픽업가능, 고양이 미용
+    @ResponseBody
+    @GetMapping("/search/tags/best")
+    public BaseResponse<List<StoreDTO>> searchBestBystoreSignificant(@RequestParam List<String> storeSignificant) {
+        try {
+            if (storeSignificant == null || storeSignificant.equals("")) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalDetails.getUser().getId();
+            User user = userRepository.findById(userId);
+            List<Store> store = searchService.searchstoreSignificantBest(storeSignificant);
+
+            // 중복된 가게 제거
+            Set<Store> uniqueStores = new HashSet<>(store);
+            List<Store> uniqueStoreList = new ArrayList<>(uniqueStores);
+
+            String tags = String.join(",", storeSignificant);
+            searchService.postSearchHistory(user, tags);
+            if (store.isEmpty()) {
+                // 반환값이 없다
+                return new BaseResponse<>(DATABASE_ERROR);
+            }
+            List<StoreDTO> resultStore = convertStoreToDTO(uniqueStoreList);
+            return new BaseResponse<>(resultStore);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //태그편집- 후기 많은 순
+    // GET /search/tags/top_review?storeSignificant=픽업가능, 고양이 미용
+    @ResponseBody
+    @GetMapping("/search/tags/top_reviews")
+    public BaseResponse<List<StoreDTO>> searchstoreSignificantMostReviews(@RequestParam List<String> storeSignificant) {
+        try {
+            if (storeSignificant == null || storeSignificant.equals("")) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalDetails.getUser().getId();
+            User user = userRepository.findById(userId);
+            List<Store> store = searchService.searchstoreSignificantMostReviews(storeSignificant);
+
+            // 중복된 가게 제거
+            Set<Store> uniqueStores = new HashSet<>(store);
+            List<Store> uniqueStoreList = new ArrayList<>(uniqueStores);
+
+            String tags = String.join(",", storeSignificant);
+            searchService.postSearchHistory(user, tags);
+            if (store.isEmpty()) {
+                // 반환값이 없다
+                return new BaseResponse<>(DATABASE_ERROR);
+            }
+            List<StoreDTO> resultStore = convertStoreToDTO(uniqueStoreList);
+            return new BaseResponse<>(resultStore);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //태그편집- 후기별점 평균 순
+    // GET /search/tags/avg?storeSignificant=픽업가능, 고양이 미용
+    @ResponseBody
+    @GetMapping("/search/tags/avg")
+    public BaseResponse<List<StoreDTO>> searchReviewsAvgBystoreSignificant(@RequestParam List<String> storeSignificant) {
+        try {
+            if (storeSignificant == null || storeSignificant.equals("")) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalDetails.getUser().getId();
+            User user = userRepository.findById(userId);
+            List<Store> store = searchService.searchstoreSignificantReviewsAvg(storeSignificant);
+
+            // 중복된 가게 제거
+            Set<Store> uniqueStores = new HashSet<>(store);
+            List<Store> uniqueStoreList = new ArrayList<>(uniqueStores);
+
+            String tags = String.join(",", storeSignificant);
+            searchService.postSearchHistory(user, tags);
+            if (store.isEmpty()) {
+                // 반환값이 없다
+                return new BaseResponse<>(DATABASE_ERROR);
+            }
+            List<StoreDTO> resultStore = convertStoreToDTO(uniqueStoreList);
+            return new BaseResponse<>(resultStore);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //태그편집- 거리순
+    // GET /search/tags/recommend?storeSignificant=픽업가능, 고양이 미용
+    @ResponseBody
+    @GetMapping("/search/tags/recommend")
+    public BaseResponse<List<StoreDTO>> searchBystoreSignificantRecommend(@RequestParam List<String> storeSignificant) {
+        try {
+            if (storeSignificant == null || storeSignificant.equals("")) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalDetails.getUser().getId();
+            User user = userRepository.findById(userId);
+            List<Store> store = searchService.recommendNeareststoreSignificant(storeSignificant);
+
+            String tags = String.join(",", storeSignificant);
+            searchService.postSearchHistory(user, tags);
             if (store.isEmpty()) {
                 // 반환값이 없다
                 return new BaseResponse<>(DATABASE_ERROR);

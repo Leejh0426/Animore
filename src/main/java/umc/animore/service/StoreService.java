@@ -56,9 +56,9 @@ public class StoreService {
             store.setClose(HourToMin(mypageStoreUpdate.getClose()));
             store.setDayoff1(DateToEng(mypageStoreUpdate.getDayoff1()));
             store.setDayoff2(DateToEng(mypageStoreUpdate.getDayoff2()));
-            store.setStoreSignificant(mypageStoreUpdate.getStoreSignificant());
+            store.setStoreSignificant(mypageStoreUpdate.getStoreSignificant()); //태그편집
             store.setAmount(AmountStringToInt(mypageStoreUpdate.getAmount()));
-            store.setTags(mypageStoreUpdate.getTags());
+            store.setTags(mypageStoreUpdate.getTags()); //한줄소개
 
             store.setStoreLocation(mypageStoreUpdate.getStoreLocation());
             store.setStoreNumber(mypageStoreUpdate.getStoreNumber());
