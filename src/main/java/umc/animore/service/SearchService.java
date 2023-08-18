@@ -578,96 +578,96 @@ public class SearchService {
 
 
 
-    //태그편집으로 가게찾음
-    public List<Store> searchStoresBySignificantIn(List<String> storeSignificant) throws BaseException{
-        try{
-            List<Store> store = storeRepository.findByStoreSignificantIn(storeSignificant);
-            return store;
-        }catch (Exception exception){
-            throw new BaseException(RESPONSE_ERROR);
-        }
-
-    }
-
-    //태그 인기순
-    public List<Store> searchstoreSignificantBest(List<String> storeSignificant) throws BaseException {
-        try {
-
-            List<Store> store = searchRespository.findByStoreSignificantInOrderByStoreLikeDesc(storeSignificant);
-            return store;
-        }catch (Exception exception){
-            throw new BaseException(RESPONSE_ERROR);
-        }
-    }
-
-    //태그 후기 많은 순
-    public List<Store> searchstoreSignificantMostReviews(List<String> storeSignificant) throws BaseException {
-        try {
-            List<Store> store = searchRespository.findStoresWithMostReviewsByStoreSignificantIn(storeSignificant);
-            return store;
-        }catch (Exception exception){
-            throw new BaseException(RESPONSE_ERROR);
-        }
-    }
-
-    //태그 후기별점 평균 순
-    public List<Store> searchstoreSignificantReviewsAvg(List<String> storeSignificant) throws BaseException {
-        try {
-            List<Store> store = searchRespository.findStoresWithHighestAverageScoreByStoreSignificantIn(storeSignificant);
-            return store;
-        }catch (Exception exception){
-            throw new BaseException(RESPONSE_ERROR);
-        }
-    }
-
-
-    //태그 거리순
-    public List<Store> recommendNeareststoreSignificant(List<String> storeSignificant) throws BaseException {
-        try {
-            Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
-            if (optionalLocation.isPresent()) {
-                Location currentLocation = optionalLocation.get();
-
-                List<Store> allStores = searchRespository.findAll();
-
-                List<Store> nearestStores = new ArrayList<>();
-                double minDistance = Double.MAX_VALUE;
-
-                for (Store store : allStores) {
-                    if (store.getStoreSignificant().containsAll(storeSignificant)) {
-                        // 가게와 현재 위치 간의 거리 계산
-                        double distance = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                                store.getLatitude(), store.getLongitude());
-
-                        // 현재 최소 거리와 같은 경우 가까운 가게 목록에 추가합니다
-                        if (distance == minDistance) {
-                            nearestStores.add(store);
-                        }
-
-                        // 현재 최소 거리보다 작은 경우 가장 가까운 가게 목록을 갱신합니다
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            nearestStores.clear();
-                            nearestStores.add(store);
-                        }
-                    }
-                }
-
-                // 최소 3개 이상의 가게가 없다면 1개 또는 2개를 추가합니다.
-                if (nearestStores.size() < 3) {
-                    int remaining = 3 - nearestStores.size();
-                    for (int i = 0; i < remaining; i++) {
-                        nearestStores.add(allStores.get(i)); // 가게 목록에서 앞에서부터 추가합니다.
-                    }
-                }
-
-                return nearestStores;
-            }
-            return null;
-        } catch (Exception exception) {
-            throw new BaseException(RESPONSE_ERROR);
-        }
-    }
-
+//    //태그편집으로 가게찾음
+//    public List<Store> searchStoresBySignificantIn(List<String> storeSignificant) throws BaseException{
+//        try{
+//            List<Store> store = storeRepository.findByStoreSignificantIn(storeSignificant);
+//            return store;
+//        }catch (Exception exception){
+//            throw new BaseException(RESPONSE_ERROR);
+//        }
+//
+//    }
+//
+//    //태그 인기순
+//    public List<Store> searchstoreSignificantBest(List<String> storeSignificant) throws BaseException {
+//        try {
+//
+//            List<Store> store = searchRespository.findByStoreSignificantInOrderByStoreLikeDesc(storeSignificant);
+//            return store;
+//        }catch (Exception exception){
+//            throw new BaseException(RESPONSE_ERROR);
+//        }
+//    }
+//
+//    //태그 후기 많은 순
+//    public List<Store> searchstoreSignificantMostReviews(List<String> storeSignificant) throws BaseException {
+//        try {
+//            List<Store> store = searchRespository.findStoresWithMostReviewsByStoreSignificantIn(storeSignificant);
+//            return store;
+//        }catch (Exception exception){
+//            throw new BaseException(RESPONSE_ERROR);
+//        }
+//    }
+//
+//    //태그 후기별점 평균 순
+//    public List<Store> searchstoreSignificantReviewsAvg(List<String> storeSignificant) throws BaseException {
+//        try {
+//            List<Store> store = searchRespository.findStoresWithHighestAverageScoreByStoreSignificantIn(storeSignificant);
+//            return store;
+//        }catch (Exception exception){
+//            throw new BaseException(RESPONSE_ERROR);
+//        }
+//    }
+//
+//
+//    //태그 거리순
+//    public List<Store> recommendNeareststoreSignificant(List<String> storeSignificant) throws BaseException {
+//        try {
+//            Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
+//            if (optionalLocation.isPresent()) {
+//                Location currentLocation = optionalLocation.get();
+//
+//                List<Store> allStores = searchRespository.findAll();
+//
+//                List<Store> nearestStores = new ArrayList<>();
+//                double minDistance = Double.MAX_VALUE;
+//
+//                for (Store store : allStores) {
+//                    if (store.getStoreSignificant().containsAll(storeSignificant)) {
+//                        // 가게와 현재 위치 간의 거리 계산
+//                        double distance = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+//                                store.getLatitude(), store.getLongitude());
+//
+//                        // 현재 최소 거리와 같은 경우 가까운 가게 목록에 추가합니다
+//                        if (distance == minDistance) {
+//                            nearestStores.add(store);
+//                        }
+//
+//                        // 현재 최소 거리보다 작은 경우 가장 가까운 가게 목록을 갱신합니다
+//                        if (distance < minDistance) {
+//                            minDistance = distance;
+//                            nearestStores.clear();
+//                            nearestStores.add(store);
+//                        }
+//                    }
+//                }
+//
+//                // 최소 3개 이상의 가게가 없다면 1개 또는 2개를 추가합니다.
+//                if (nearestStores.size() < 3) {
+//                    int remaining = 3 - nearestStores.size();
+//                    for (int i = 0; i < remaining; i++) {
+//                        nearestStores.add(allStores.get(i)); // 가게 목록에서 앞에서부터 추가합니다.
+//                    }
+//                }
+//
+//                return nearestStores;
+//            }
+//            return null;
+//        } catch (Exception exception) {
+//            throw new BaseException(RESPONSE_ERROR);
+//        }
+//    }
+//
 
 }
