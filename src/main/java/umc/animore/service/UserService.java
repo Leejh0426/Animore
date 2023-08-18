@@ -34,6 +34,15 @@ public class UserService {
 
     }
 
+    @Transactional
+    public void save(User user) throws BaseException{
+        try{
+            userRepository.save(user);
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     // 예약상세 저장내용 불러오기
     // 유저정보 + 펫정보 불러오기
     @Transactional

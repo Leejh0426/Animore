@@ -22,13 +22,18 @@ public enum BaseResponseStatus { //열거 상수를 통해 응답상태를 나�
     GET_PET_EMPTY_NAME(false, 2008, "PET의 이름이 존재하지 않습니다."),
 
     GET_USER_EMPTY_NICKNAME_NAME(false, 2009, "user의 별명을 입력하지 않았습니다."),
+    GET_USER_PASSWORD_ERROR(false, 2010, "비밀번호가 일치하지 않습니다"),
+    GET_USER_EMPTY_USERNAME(false, 2011, "user의 아이디를 입력하지 않았습니다."),
+    GET_USER_EMPTY_PASSWORD(false, 2012, "user의 비밀번호를 입력하지 않았습니다."),
 
-    GET_USER_PASSWORD_ERROR(false, 2009, "비밀번호가 일치하지 않습니다"),
+
+
+
 
 
     //3000 : 응답 오류
     RESPONSE_ERROR(false,3000,"값을 불러오는데 실패"),
-
+    REDIRECT_ERROR(false,3001,"리다이렉트 실패"),
 
     //4000 : 데이터베이스, 서버 오류
     DATABASE_ERROR(false,4000,"데이터베이스 연결에 실패"),

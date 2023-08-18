@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.util.UriComponentsBuilder;
 import umc.animore.config.auth.PrincipalDetails;
 import umc.animore.model.User;
 
@@ -84,6 +85,7 @@ public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
                 .withClaim("id",principalDetails.getUser().getId())
                 .withClaim("username",principalDetails.getUser().getUsername())
                 .sign(Algorithm.HMAC512("cos"));
+
 
         response.addHeader("Authorization","Bearer " + jwtToken);
 
