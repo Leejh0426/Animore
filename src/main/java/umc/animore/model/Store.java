@@ -66,8 +66,10 @@ public class Store {
     @CollectionTable(name = "store_hashtags", joinColumns = @JoinColumn(name = "store_id"))
     @Column(name = "tags")
     private List<String> tags;  //해시태그
+    @ElementCollection
+    @CollectionTable(name = "store_tags", joinColumns = @JoinColumn(name = "store_id"))
     @Column(name = "storeSignificant")
-    private String storeSignificant;
+    private List<String> storeSignificant; //태그 편집
     @Column(name = "dayoff1")
     private String dayoff1;
     @Column(name = "dayoff2")

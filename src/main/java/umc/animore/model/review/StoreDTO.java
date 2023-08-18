@@ -33,8 +33,8 @@ public class StoreDTO {
     private int amount;                 // 최대 예약 건수
     private String dayoff1;
     private String dayoff2;
-    private List<String> tags;
-    private String storeSignificant;
+    private List<String> tags; //해시태그
+    private List<String> storeSignificant; //태그 편집
 
 }
 

@@ -29,9 +29,9 @@ public class MypageStoreUpdate {
 
     private String amount;
 
-    private String storeSignificant;
+    private List<String> storeSignificant; // 태그 편집
 
-    private List<String> tags;  //해시태그
+    private List<String> tags;  //해시태그 - 한줄소개
 
     private String storeLocation; //업체 주소
     private String storeNumber; // 업체 번호
@@ -40,7 +40,7 @@ public class MypageStoreUpdate {
     private Long townId;//도시 id
 
 
-    public MypageStoreUpdate(String storeName, String storeExplain, String storeImageUrl, String open, String close, String dayoff1, String dayoff2, String amount, String storeSignificant, List<String> tags,String storeLocation, String storeNumber, double latitude, double longitude, Long townId) {
+    public MypageStoreUpdate(String storeName, String storeExplain, String storeImageUrl, String open, String close, String dayoff1, String dayoff2, String amount, List<String> storeSignificant, List<String> tags,String storeLocation, String storeNumber, double latitude, double longitude, Long townId) {
         this.storeName = storeName;
         this.storeExplain = storeExplain;
         this.storeImageUrl = storeImageUrl;
