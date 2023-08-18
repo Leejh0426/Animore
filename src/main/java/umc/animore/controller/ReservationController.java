@@ -474,6 +474,7 @@ public class ReservationController {
                 reservationMap.put("storeName", i.getStore().getStoreName());
                 reservationMap.put("storeLocation", i.getStore().getStoreLocation());
                 reservationMap.put("storeNumber", i.getStore().getStoreNumber());
+                reservationMap.put("reservationId", i.getReservationId());
 
                 result.add(reservationMap);
             }
