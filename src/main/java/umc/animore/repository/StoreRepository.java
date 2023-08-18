@@ -13,7 +13,7 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
     //해시태그로 찾음
     List<Store> findByTagsIn(List<String> tags);
 
-
-//    List<Store> findByStoreSignificantIn(List<String> storeSignificant);
+    //태그편집으로 찾음
+    List<Store> findByStoreSignificantIn(List<String> storeSignificant);
 }
 
