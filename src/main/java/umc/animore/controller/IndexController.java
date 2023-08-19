@@ -85,16 +85,15 @@ public class IndexController {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
 
-        if (!user.getPets().isEmpty()) {
-            return new BaseResponse<>(ALREADY_REGISTERED_USER);
-        }
-
         Pet pet = new Pet();
         pet.setUser(user);
 
-
         if (signUpInfo.getPassword().isEmpty()) {
             return new BaseResponse<>(PASSWORD_EMPTY_ERROR);
+        }
+
+        if (!user.getPassword().isEmpty()){
+            return new BaseResponse<>(ALREADY_REGISTERED_USER);
         }
 
         try {
