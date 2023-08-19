@@ -88,11 +88,11 @@ public class IndexController {
         Pet pet = new Pet();
         pet.setUser(user);
 
-        if (signUpInfo.getPassword().isEmpty()) {
+        if (signUpInfo.getPassword() == null) {
             return new BaseResponse<>(PASSWORD_EMPTY_ERROR);
         }
 
-        if (!user.getPassword().isEmpty()){
+        if (user.getPassword() != null){
             return new BaseResponse<>(ALREADY_REGISTERED_USER);
         }
 
@@ -102,19 +102,19 @@ public class IndexController {
                 return new BaseResponse<>(PASSWORD_INPUT_ERROR);
             }
 
-            if (signUpInfo.getAddress().isEmpty()) {
+            if (signUpInfo.getAddress() == null) {
                 return new BaseResponse<>(ADDRESS_INPUT_ERROR);
             }
-            if(signUpInfo.getPetname().isEmpty()) {
+            if(signUpInfo.getPetname() == null) {
                 return new BaseResponse<>(PETNAME_INPUT_ERROR);
             }
-            if (signUpInfo.getPettype().isEmpty()) {
+            if (signUpInfo.getPettype() == null) {
                 return new BaseResponse<>(PETTYPE_INPUT_ERROR);
             }
-            if (signUpInfo.getNickname().isEmpty()) {
+            if (signUpInfo.getNickname() == null) {
                 return new BaseResponse<>(NICKNAME_INPUT_ERROR);
             }
-            if (signUpInfo.getPhone().isEmpty()) {
+            if (signUpInfo.getPhone() == null) {
                 return new BaseResponse<>(PHONE_INPUT_ERROR);
             }
 
