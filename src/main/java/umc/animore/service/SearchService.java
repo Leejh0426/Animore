@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import umc.animore.config.auth.PrincipalDetails;
@@ -668,6 +669,5 @@ public class SearchService {
             throw new BaseException(RESPONSE_ERROR);
         }
     }
-
 
 }

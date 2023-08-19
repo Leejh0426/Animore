@@ -15,10 +15,7 @@ import umc.animore.repository.StoreRepository;
 import umc.animore.repository.UserRepository;
 import umc.animore.service.SearchService;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static umc.animore.config.exception.BaseResponseStatus.*;
 
@@ -965,7 +962,7 @@ public class SearchController {
     }
 
     //태그편집- 후기 많은 순
-    // GET /search/tags/top_review?storeSignificant=픽업가능, 고양이 미용
+    // GET /search/tags/top_review?storeSignificant=픽업가능,고양이 미용
     @ResponseBody
     @GetMapping("/search/tags/top_reviews")
     public BaseResponse<List<StoreDTO>> searchstoreSignificantMostReviews(@RequestParam List<String> storeSignificant) {
@@ -1055,6 +1052,91 @@ public class SearchController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+
+    //통합검색
+    @ResponseBody
+    @GetMapping("/search")
+    public BaseResponse<List<StoreDTO>> searchByAll(@RequestParam(required = false) String query1,
+                                                    @RequestParam(required = false) String query2) {
+        try {
+            if (isEmpty(query1) && isEmpty(query2)) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalDetails.getUser().getId();
+            User user = userRepository.findById(userId);
+            List<Store> store = new ArrayList<>();
+
+            // query 파라미터 값을 파싱하여 각각의 조건에 따라 처리
+            if (query1.startsWith("가게이름:")) {
+                String Name = query1.substring("가게이름:".length());
+                List<Store> nameMatches = searchService.searchNameList(Name);
+                store.addAll(nameMatches);
+                searchService.postSearchHistory(user, Name);
+            } else if (query1.startsWith("가게주소:")) {
+                String storeLocation = query1.substring("가게주소:".length());
+                List<Store> locationMatches = searchService.searchLocationList(storeLocation);
+                store.addAll(locationMatches);
+                searchService.postSearchHistory(user, storeLocation);
+            } else if (query1.startsWith("지역:")) {
+                String[] parts = query1.substring("지역:".length()).split(",");
+                if (parts.length >= 2) {
+                    String city = parts[0];
+                    String district = parts[1];
+                    List<Store> cityMatches = searchService.searchCityList(city, district);
+                    store.addAll(cityMatches);
+                    searchService.postSearchHistory(user, city + " " + district);
+                } else {
+                    return new BaseResponse<>(DATABASE_ERROR);
+                }
+            } else if (query1.startsWith("해시태그:")) {
+                String[] tags = query1.substring("해시태그:".length()).split(",");
+                store = searchService.searchStoresBytags(Arrays.asList(tags));
+                // 중복된 가게 제거
+                Set<Store> uniqueStores = new HashSet<>(store);
+                store = new ArrayList<>(uniqueStores);
+
+                String tagList = String.join(",", tags);
+                searchService.postSearchHistory(user, tagList);
+            }else if (query1.startsWith("서비스태그:")) {
+                String[] storeSignificant = query1.substring("서비스태그:".length()).split(",");
+                store = searchService.searchStoresBySignificantIn(Arrays.asList(storeSignificant));
+                // 중복된 가게 제거
+                Set<Store> uniqueStores = new HashSet<>(store);
+                store = new ArrayList<>(uniqueStores);
+
+                String tagList = String.join(",", storeSignificant);
+                searchService.postSearchHistory(user, tagList);
+            }
+
+
+            // storeName과 hashtags 값이 있는 경우
+            if (!isEmpty(query2)) {
+                List<Store> nameMatches = searchService.searchNameList(query2);
+                store.addAll(nameMatches);
+                searchService.postSearchHistory(user, query2);
+            }
+
+
+            List<StoreDTO> resultStore = convertStoreToDTO(store);
+            return new BaseResponse<>(resultStore);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+    private boolean isEmpty(String value) {
+        return value == null || value.isEmpty();
+    }
+
+    private boolean isEmptyList(List<?> list) {
+        return list == null || list.isEmpty();
+    }
+
 
 }
 
