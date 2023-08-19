@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -209,180 +210,6 @@ public class SearchService {
 
     }
 
-    //거리순 - 가게이름
-        //* 가게이름을 완전히 똑같게 입력하지않으면 equals 작동안되지않나?
-        //** 목록 갱신할때 CLEAR()해버리면 가장 가까운 가게만 List에 남을텐데 의도한건가?
-
-    public List<Store> recommendNearestStore(String storeName) throws BaseException {
-        try {
-            Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
-            if (optionalLocation.isPresent()) {
-                Location currentLocation = optionalLocation.get();
-
-                List<Store> allStores = searchRespository.findAll();
-
-                List<Store> nearestStores = new ArrayList<>();
-                double minDistance = Double.MAX_VALUE;
-
-                for (Store store : allStores) {
-                    if (store.getStoreName().equals(storeName)) {
-                        // 가게와 현재 위치 간의 거리 계산
-                        double distance = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                                store.getLatitude(), store.getLongitude());
-
-                        // 현재 최소 거리와 같은 경우 가까운 가게 목록에 추가합니다
-                        if (distance == minDistance) {
-                            nearestStores.add(store);
-                        }
-
-                        // 현재 최소 거리보다 작은 경우 가장 가까운 가게 목록을 갱신합니다
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            nearestStores.clear();
-                            nearestStores.add(store);
-                        }
-                    }
-                }
-
-                // 최소 3개 이상의 가게가 없다면 1개 또는 2개를 추가합니다.
-                if (nearestStores.size() < 3) {
-                    int remaining = 3 - nearestStores.size();
-                    for (Store store : allStores) {
-                        if (store.getStoreName().equals(storeName)) {
-                            if (!nearestStores.contains(store)) {
-                                nearestStores.add(store);
-                                remaining--;
-                                if (remaining == 0) {
-                                    break; // 최대 3개까지만 추가합니다.
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return nearestStores;
-            }
-            return null;
-        } catch (Exception exception) {
-            throw new BaseException(RESPONSE_ERROR);
-        }
-    }
-
-
-    //거리순 - 가게주소
-    public List<Store> recommendNearestStoreLocation(String storeLocation) throws BaseException {
-        try {
-            Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
-            if (optionalLocation.isPresent()) {
-                Location currentLocation = optionalLocation.get();
-
-                List<Store> allStores = searchRespository.findAll();
-
-                List<Store> nearestStores = new ArrayList<>();
-                double minDistance = Double.MAX_VALUE;
-
-                for (Store store : allStores) {
-                    if (store.getStoreLocation().equals(storeLocation)) {
-                        // 가게와 현재 위치 간의 거리 계산
-                        double distance = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                                store.getLatitude(), store.getLongitude());
-
-                        // 현재 최소 거리와 같은 경우 가까운 가게 목록에 추가합니다
-                        if (distance == minDistance) {
-                            nearestStores.add(store);
-                        }
-
-                        // 현재 최소 거리보다 작은 경우 가장 가까운 가게 목록을 갱신합니다
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            nearestStores.clear();
-                            nearestStores.add(store);
-                        }
-                    }
-                }
-
-                // 최소 3개 이상의 가게가 없다면 1개 또는 2개를 추가합니다.
-                if (nearestStores.size() < 3) {
-                    int remaining = 3 - nearestStores.size();
-                    for (Store store : allStores) {
-                        if (store.getStoreLocation().equals(storeLocation)) {
-                            if (!nearestStores.contains(store)) {
-                                nearestStores.add(store);
-                                remaining--;
-                                if (remaining == 0) {
-                                    break; // 최대 3개까지만 추가합니다.
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return nearestStores;
-            }
-            return null;
-        } catch (Exception exception) {
-            throw new BaseException(RESPONSE_ERROR);
-        }
-    }
-
-
-    //거리순 - 가게시도
-    public List<Store> recommendNearestStoreTown(String city, String district) throws BaseException {
-        try {
-            Town town = townRepository.getTownIdByCityAndDistrict(city, district);
-            Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
-            if (optionalLocation.isPresent()) {
-                Location currentLocation = optionalLocation.get();
-
-                List<Store> allStores = searchRespository.findAll();
-
-                List<Store> nearestStores = new ArrayList<>();
-                double minDistance = Double.MAX_VALUE;
-
-                for (Store store : allStores) {
-                    if (store.getTown().equals(town)) {
-                        // 가게와 현재 위치 간의 거리 계산
-                        double distance = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                                store.getLatitude(), store.getLongitude());
-
-                        // 현재 최소 거리와 같은 경우 가까운 가게 목록에 추가합니다
-                        if (distance == minDistance) {
-                            nearestStores.add(store);
-                        }
-
-                        // 현재 최소 거리보다 작은 경우 가장 가까운 가게 목록을 갱신합니다
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            nearestStores.clear();
-                            nearestStores.add(store);
-                        }
-                    }
-                }
-
-                // 최소 3개 이상의 가게가 없다면 1개 또는 2개를 추가합니다.
-                if (nearestStores.size() < 3) {
-                    int remaining = 3 - nearestStores.size();
-                    for (Store store : allStores) {
-                        if (store.getTown().equals(town)) {
-                            if (!nearestStores.contains(store)) {
-                                nearestStores.add(store);
-                                remaining--;
-                                if (remaining == 0) {
-                                    break; // 최대 3개까지만 추가합니다.
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return nearestStores;
-            }
-            return null;
-        } catch (Exception exception) {
-            throw new BaseException(RESPONSE_ERROR);
-        }
-    }
-
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371; // 지구의 반지름 (단위: km)
 
@@ -398,6 +225,179 @@ public class SearchService {
 
         return distance;
     }
+
+    //거리순 - 가게이름
+        //* 가게이름을 완전히 똑같게 입력하지않으면 equals 작동안되지않나?
+        //** 목록 갱신할때 CLEAR()해버리면 가장 가까운 가게만 List에 남을텐데 의도한건가?
+
+    public List<Store> recommendNearestStore(String storeName) throws BaseException {
+        try {
+            Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
+            if (optionalLocation.isPresent()) {
+                Location currentLocation = optionalLocation.get();
+
+                List<Store> allStores = searchRespository.findAll();
+
+                // 이름을 포함하는 가게 목록을 찾습니다.
+                List<Store> storesWithName = new ArrayList<>();
+
+                for (Store store : allStores) {
+                    if (store.getStoreLocation().equals(storeName)) {
+                        // 가게와 현재 위치 간의 거리 계산
+                        storesWithName.add(store);
+                    }
+                }
+
+                if (!storesWithName.isEmpty()) {
+                    storesWithName.sort((store1, store2) -> {
+                        double distance1 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store1.getLatitude(), store1.getLongitude());
+                        double distance2 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store2.getLatitude(), store2.getLongitude());
+                        double threshold = 0.001; // 거리가 0.001 이하인 경우 동일한 거리로 간주
+
+                        if (Math.abs(distance1 - distance2) < threshold) {
+                            return 0;
+                        } else {
+                            return Double.compare(distance1, distance2);
+                        }
+                    });
+                }
+                else {
+                    // 가게 이름을 포함하는 가게 목록이 없는 경우에도 해당 가게를 리스트에 추가합니다.
+                    Store selfStore = allStores.stream()
+                            .filter(store -> store.getStoreName().equals(storeName))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (selfStore != null) {
+                        storesWithName.add(selfStore);
+                    }
+                }
+
+                // 가게 이름을 포함하는 가게 목록을 반환합니다.
+                return storesWithName;
+
+            }
+            return null;
+        } catch (Exception exception) {
+            throw new BaseException(NO_MATCHING_STORE);
+        }
+    }
+
+
+    //거리순 - 가게주소
+    public List<Store> recommendNearestStoreLocation(String storeLocation) throws BaseException {
+        try {
+            Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
+            if (optionalLocation.isPresent()) {
+                Location currentLocation = optionalLocation.get();
+
+                List<Store> allStores = searchRespository.findAll();
+
+                // 지역를 포함하는 가게 목록을 찾습니다.
+                List<Store> storesWithLocation = new ArrayList<>();
+
+                for (Store store : allStores) {
+                    if (store.getStoreLocation().equals(storeLocation)) {
+                        // 가게와 현재 위치 간의 거리 계산
+                        storesWithLocation.add(store);
+                    }
+                }
+                // 주소를 포함하는 가게 목록을 거리 순으로 정렬합니다.
+                if (!storesWithLocation.isEmpty()) {
+                    Collections.sort(storesWithLocation, (store1, store2) -> {
+                        double distance1 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store1.getLatitude(), store1.getLongitude());
+                        double distance2 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store2.getLatitude(), store2.getLongitude());
+                        double threshold = 0.001; // 거리가 0.001 이하인 경우 동일한 거리로 간주
+
+                        if (Math.abs(distance1 - distance2) < threshold) {
+                            return 0;
+                        } else {
+                            return Double.compare(distance1, distance2);
+                        }
+                    });
+                }
+                else {
+                    // 가게 주소을 포함하는 가게 목록이 없는 경우에도 해당 가게를 리스트에 추가합니다.
+                    Store selfStore = allStores.stream()
+                            .filter(store -> store.getStoreLocation().equals(storeLocation))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (selfStore != null) {
+                        storesWithLocation.add(selfStore);
+                    }
+                }
+
+                return storesWithLocation;
+            }
+            return null;
+        } catch (Exception exception) {
+            throw new BaseException(NO_MATCHING_STORE);
+        }
+    }
+
+
+    //거리순 - 가게시도
+    public List<Store> recommendNearestStoreTown(String city, String district) throws BaseException {
+        try {
+            Town town = townRepository.getTownIdByCityAndDistrict(city, district);
+            Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
+            if (optionalLocation.isPresent()) {
+                Location currentLocation = optionalLocation.get();
+
+                List<Store> allStores = searchRespository.findAll();
+
+                // 지역를 포함하는 가게 목록을 찾습니다.
+                List<Store> storesWithTown = new ArrayList<>();
+
+                for (Store store : allStores) {
+                    if (store.getTown().equals(town)) {
+                        storesWithTown.add(store);
+                    }
+                }
+
+                if (!storesWithTown.isEmpty()) {
+                    // 시도를 포함하는 가게 목록을 거리 순으로 정렬합니다.
+                    Collections.sort(storesWithTown, (store1, store2) -> {
+                        double distance1 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store1.getLatitude(), store1.getLongitude());
+                        double distance2 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store2.getLatitude(), store2.getLongitude());
+                        double threshold = 0.001; // 거리가 0.001 이하인 경우 동일한 거리로 간주
+
+                        if (Math.abs(distance1 - distance2) < threshold) {
+                            return 0;
+                        } else {
+                            return Double.compare(distance1, distance2);
+                        }
+                    });
+                }
+                else{
+                    // 가게 지역을 포함하는 가게 목록이 없는 경우에도 해당 가게를 리스트에 추가합니다.
+                    Store selfStore = allStores.stream()
+                            .filter(store -> store.getTown().equals(town))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (selfStore != null) {
+                        storesWithTown.add(selfStore);
+                    }
+
+                }
+
+                return storesWithTown;
+            }
+            return null;
+        } catch (Exception exception) {
+            throw new BaseException(NO_MATCHING_STORE);
+        }
+    }
+
+
 
     //최근 검색기록 (3개씩)
     public List<SearchHistory> searchHistory(User user) throws BaseException {
@@ -538,42 +538,49 @@ public class SearchService {
 
                 List<Store> allStores = searchRespository.findAll();
 
-                List<Store> nearestStores = new ArrayList<>();
-                double minDistance = Double.MAX_VALUE;
+                // 해시태그를 포함하는 가게 목록을 찾습니다.
+                List<Store> storesWithTags = new ArrayList<>();
 
                 for (Store store : allStores) {
                     if (store.getTags().containsAll(tags)) {
-                        // 가게와 현재 위치 간의 거리 계산
-                        double distance = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                                store.getLatitude(), store.getLongitude());
-
-                        // 현재 최소 거리와 같은 경우 가까운 가게 목록에 추가합니다
-                        if (distance == minDistance) {
-                            nearestStores.add(store);
-                        }
-
-                        // 현재 최소 거리보다 작은 경우 가장 가까운 가게 목록을 갱신합니다
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            nearestStores.clear();
-                            nearestStores.add(store);
-                        }
+                        storesWithTags.add(store);
                     }
                 }
 
-                // 최소 3개 이상의 가게가 없다면 1개 또는 2개를 추가합니다.
-                if (nearestStores.size() < 3) {
-                    int remaining = 3 - nearestStores.size();
-                    for (int i = 0; i < remaining; i++) {
-                        nearestStores.add(allStores.get(i)); // 가게 목록에서 앞에서부터 추가합니다.
+                if (!storesWithTags.isEmpty()) {
+                    // 태그를 포함하는 가게 목록을 거리 순으로 정렬합니다.
+                    Collections.sort(storesWithTags, (store1, store2) -> {
+                        double distance1 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store1.getLatitude(), store1.getLongitude());
+                        double distance2 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store2.getLatitude(), store2.getLongitude());
+                        double threshold = 0.001; // 거리가 0.001 이하인 경우 동일한 거리로 간주
+
+                        if (Math.abs(distance1 - distance2) < threshold) {
+                            return 0;
+                        } else {
+                            return Double.compare(distance1, distance2);
+                        }
+                    });
+                }
+                else {
+                    // 가게 해시태그를 포함하는 가게 목록이 없는 경우에도 해당 가게를 리스트에 추가합니다.
+                    Store selfStore = allStores.stream()
+                            .filter(store -> store.getTags().equals(tags))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (selfStore != null) {
+                        storesWithTags.add(selfStore);
                     }
+
                 }
 
-                return nearestStores;
+                return storesWithTags;
             }
             return null;
         } catch (Exception exception) {
-            throw new BaseException(RESPONSE_ERROR);
+            throw new BaseException(NO_MATCHING_STORE);
         }
     }
 
@@ -622,7 +629,7 @@ public class SearchService {
     }
 
 
-    //태그 거리순
+    // 태그 거리순
     public List<Store> recommendNeareststoreSignificant(List<String> storeSignificant) throws BaseException {
         try {
             Optional<Location> optionalLocation = Optional.ofNullable(locationRepository.findByLocationId(1L));
@@ -631,43 +638,48 @@ public class SearchService {
 
                 List<Store> allStores = searchRespository.findAll();
 
-                List<Store> nearestStores = new ArrayList<>();
-                double minDistance = Double.MAX_VALUE;
+                // 태그를 포함하는 가게 목록을 찾습니다.
+                List<Store> storesWithTags = new ArrayList<>();
 
                 for (Store store : allStores) {
                     if (store.getStoreSignificant().containsAll(storeSignificant)) {
-                        // 가게와 현재 위치 간의 거리 계산
-                        double distance = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                                store.getLatitude(), store.getLongitude());
-
-                        // 현재 최소 거리와 같은 경우 가까운 가게 목록에 추가합니다
-                        if (distance == minDistance) {
-                            nearestStores.add(store);
-                        }
-
-                        // 현재 최소 거리보다 작은 경우 가장 가까운 가게 목록을 갱신합니다
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            nearestStores.clear();
-                            nearestStores.add(store);
-                        }
+                        storesWithTags.add(store);
                     }
                 }
 
-                // 최소 3개 이상의 가게가 없다면 1개 또는 2개를 추가합니다.
-                if (nearestStores.size() < 3) {
-                    int remaining = 3 - nearestStores.size();
-                    for (int i = 0; i < remaining; i++) {
-                        nearestStores.add(allStores.get(i)); // 가게 목록에서 앞에서부터 추가합니다.
+                if (!storesWithTags.isEmpty()) {
+                    // 태그를 포함하는 가게 목록을 거리 순으로 정렬합니다.
+                    Collections.sort(storesWithTags, (store1, store2) -> {
+                        double distance1 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store1.getLatitude(), store1.getLongitude());
+                        double distance2 = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                store2.getLatitude(), store2.getLongitude());
+                        double threshold = 0.001; // 거리가 0.001 이하인 경우 동일한 거리로 간주
+
+                        if (Math.abs(distance1 - distance2) < threshold) {
+                            return 0;
+                        } else {
+                            return Double.compare(distance1, distance2);
+                        }
+                    });
+                }
+                else{
+                    // 가게 해시태그를 포함하는 가게 목록이 없는 경우에도 해당 가게를 리스트에 추가합니다.
+                    Store selfStore = allStores.stream()
+                            .filter(store -> store.getTags().equals(storeSignificant))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (selfStore != null) {
+                        storesWithTags.add(selfStore);
                     }
                 }
 
-                return nearestStores;
+                return storesWithTags;
             }
             return null;
         } catch (Exception exception) {
-            throw new BaseException(RESPONSE_ERROR);
+            throw new BaseException(NO_MATCHING_STORE);
         }
     }
-
 }

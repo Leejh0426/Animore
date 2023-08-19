@@ -1128,6 +1128,228 @@ public class SearchController {
         }
     }
 
+    //후기 많은 순
+    @ResponseBody
+    @GetMapping("/search/TopReviews")
+    public BaseResponse<List<StoreDTO>> searchByAllTopReviews(@RequestParam(required = false) String query1,
+                                                    @RequestParam(required = false) String query2) {
+        try {
+            if (isEmpty(query1) && isEmpty(query2)) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalDetails.getUser().getId();
+            User user = userRepository.findById(userId);
+            List<Store> store = new ArrayList<>();
+
+            // query 파라미터 값을 파싱하여 각각의 조건에 따라 처리
+            if (query1.startsWith("가게이름:")) {
+                String Name = query1.substring("가게이름:".length());
+                List<Store> nameMatches = searchService.searchNameMostReviewsList(Name);
+                store.addAll(nameMatches);
+                searchService.postSearchHistory(user, Name);
+            } else if (query1.startsWith("가게주소:")) {
+                String storeLocation = query1.substring("가게주소:".length());
+                List<Store> locationMatches = searchService.searchLocationMostReviewsList(storeLocation);
+                store.addAll(locationMatches);
+                searchService.postSearchHistory(user, storeLocation);
+            } else if (query1.startsWith("지역:")) {
+                String[] parts = query1.substring("지역:".length()).split(",");
+                if (parts.length >= 2) {
+                    String city = parts[0];
+                    String district = parts[1];
+                    List<Store> cityMatches = searchService.searchCityListMostReviews(city, district);
+                    store.addAll(cityMatches);
+                    searchService.postSearchHistory(user, city + " " + district);
+                } else {
+                    return new BaseResponse<>(DATABASE_ERROR);
+                }
+            } else if (query1.startsWith("해시태그:")) {
+                String[] tags = query1.substring("해시태그:".length()).split(",");
+                store = searchService.searchTagsMostReviews(Arrays.asList(tags));
+                // 중복된 가게 제거
+                Set<Store> uniqueStores = new HashSet<>(store);
+                store = new ArrayList<>(uniqueStores);
+
+                String tagList = String.join(",", tags);
+                searchService.postSearchHistory(user, tagList);
+            }else if (query1.startsWith("서비스태그:")) {
+                String[] storeSignificant = query1.substring("서비스태그:".length()).split(",");
+                store = searchService.searchstoreSignificantMostReviews(Arrays.asList(storeSignificant));
+                // 중복된 가게 제거
+                Set<Store> uniqueStores = new HashSet<>(store);
+                store = new ArrayList<>(uniqueStores);
+
+                String tagList = String.join(",", storeSignificant);
+                searchService.postSearchHistory(user, tagList);
+            }
+
+
+            // storeName과 hashtags 값이 있는 경우
+            if (!isEmpty(query2)) {
+                List<Store> nameMatches = searchService.searchNameMostReviewsList(query2);
+                store.addAll(nameMatches);
+                searchService.postSearchHistory(user, query2);
+            }
+
+
+            List<StoreDTO> resultStore = convertStoreToDTO(store);
+            return new BaseResponse<>(resultStore);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //인기순
+    @ResponseBody
+    @GetMapping("/search/avg")
+    public BaseResponse<List<StoreDTO>> searchByAllAVG(@RequestParam(required = false) String query1,
+                                                              @RequestParam(required = false) String query2) {
+        try {
+            if (isEmpty(query1) && isEmpty(query2)) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalDetails.getUser().getId();
+            User user = userRepository.findById(userId);
+            List<Store> store = new ArrayList<>();
+
+            // query 파라미터 값을 파싱하여 각각의 조건에 따라 처리
+            if (query1.startsWith("가게이름:")) {
+                String Name = query1.substring("가게이름:".length());
+                List<Store> nameMatches = searchService.searchNameReviewsAvgList(Name);
+                store.addAll(nameMatches);
+                searchService.postSearchHistory(user, Name);
+            } else if (query1.startsWith("가게주소:")) {
+                String storeLocation = query1.substring("가게주소:".length());
+                List<Store> locationMatches = searchService.searchLocationReviewsAvgList(storeLocation);
+                store.addAll(locationMatches);
+                searchService.postSearchHistory(user, storeLocation);
+            } else if (query1.startsWith("지역:")) {
+                String[] parts = query1.substring("지역:".length()).split(",");
+                if (parts.length >= 2) {
+                    String city = parts[0];
+                    String district = parts[1];
+                    List<Store> cityMatches = searchService.searchCityListReviewsAvg(city, district);
+                    store.addAll(cityMatches);
+                    searchService.postSearchHistory(user, city + " " + district);
+                } else {
+                    return new BaseResponse<>(DATABASE_ERROR);
+                }
+            } else if (query1.startsWith("해시태그:")) {
+                String[] tags = query1.substring("해시태그:".length()).split(",");
+                store = searchService.searchTagsReviewsAvg(Arrays.asList(tags));
+                // 중복된 가게 제거
+                Set<Store> uniqueStores = new HashSet<>(store);
+                store = new ArrayList<>(uniqueStores);
+
+                String tagList = String.join(",", tags);
+                searchService.postSearchHistory(user, tagList);
+            }else if (query1.startsWith("서비스태그:")) {
+                String[] storeSignificant = query1.substring("서비스태그:".length()).split(",");
+                store = searchService.searchstoreSignificantReviewsAvg(Arrays.asList(storeSignificant));
+                // 중복된 가게 제거
+                Set<Store> uniqueStores = new HashSet<>(store);
+                store = new ArrayList<>(uniqueStores);
+
+                String tagList = String.join(",", storeSignificant);
+                searchService.postSearchHistory(user, tagList);
+            }
+
+
+            // storeName과 hashtags 값이 있는 경우
+            if (!isEmpty(query2)) {
+                List<Store> nameMatches = searchService.searchNameReviewsAvgList(query2);
+                store.addAll(nameMatches);
+                searchService.postSearchHistory(user, query2);
+            }
+
+
+            List<StoreDTO> resultStore = convertStoreToDTO(store);
+            return new BaseResponse<>(resultStore);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //거리순
+    @ResponseBody
+    @GetMapping("/search/distance")
+    public BaseResponse<List<StoreDTO>> searchByAllDistance(@RequestParam(required = false) String query1,
+                                                       @RequestParam(required = false) String query2) {
+        try {
+            if (isEmpty(query1) && isEmpty(query2)) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalDetails.getUser().getId();
+            User user = userRepository.findById(userId);
+            List<Store> store = new ArrayList<>();
+
+            // query 파라미터 값을 파싱하여 각각의 조건에 따라 처리
+            if (query1.startsWith("가게이름:")) {
+                String Name = query1.substring("가게이름:".length());
+                List<Store> nameMatches = searchService.recommendNearestStore(Name);
+                store.addAll(nameMatches);
+                searchService.postSearchHistory(user, Name);
+            } else if (query1.startsWith("가게주소:")) {
+                String storeLocation = query1.substring("가게주소:".length());
+                List<Store> locationMatches = searchService.recommendNearestStoreLocation(storeLocation);
+                store.addAll(locationMatches);
+                searchService.postSearchHistory(user, storeLocation);
+            } else if (query1.startsWith("지역:")) {
+                String[] parts = query1.substring("지역:".length()).split(",");
+                if (parts.length >= 2) {
+                    String city = parts[0];
+                    String district = parts[1];
+                    List<Store> cityMatches = searchService.recommendNearestStoreTown(city, district);
+                    store.addAll(cityMatches);
+                    searchService.postSearchHistory(user, city + " " + district);
+                } else {
+                    return new BaseResponse<>(DATABASE_ERROR);
+                }
+            } else if (query1.startsWith("해시태그:")) {
+                String[] tags = query1.substring("해시태그:".length()).split(",");
+                store = searchService.recommendNearestHashTags(Arrays.asList(tags));
+                // 중복된 가게 제거
+                Set<Store> uniqueStores = new HashSet<>(store);
+                store = new ArrayList<>(uniqueStores);
+
+                String tagList = String.join(",", tags);
+                searchService.postSearchHistory(user, tagList);
+            }else if (query1.startsWith("서비스태그:")) {
+                String[] storeSignificant = query1.substring("서비스태그:".length()).split(",");
+                store = searchService.recommendNeareststoreSignificant(Arrays.asList(storeSignificant));
+                // 중복된 가게 제거
+                Set<Store> uniqueStores = new HashSet<>(store);
+                store = new ArrayList<>(uniqueStores);
+
+                String tagList = String.join(",", storeSignificant);
+                searchService.postSearchHistory(user, tagList);
+            }
+
+
+            // storeName과 hashtags 값이 있는 경우
+            if (!isEmpty(query2)) {
+                List<Store> nameMatches = searchService.recommendNearestStore(query2);
+                store.addAll(nameMatches);
+                searchService.postSearchHistory(user, query2);
+            }
+
+
+            List<StoreDTO> resultStore = convertStoreToDTO(store);
+            return new BaseResponse<>(resultStore);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 
     private boolean isEmpty(String value) {
         return value == null || value.isEmpty();
