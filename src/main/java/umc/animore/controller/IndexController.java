@@ -84,6 +84,11 @@ public class IndexController {
 
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
+
+        if (!user.getPets().isEmpty()) {
+            return new BaseResponse<>(ALREADY_REGISTERED_USER);
+        }
+
         Pet pet = new Pet();
         pet.setUser(user);
 
@@ -100,13 +105,17 @@ public class IndexController {
 
             if (signUpInfo.getAddress().isEmpty()) {
                 return new BaseResponse<>(ADDRESS_INPUT_ERROR);
-            } else if(signUpInfo.getPetname().isEmpty()) {
+            }
+            if(signUpInfo.getPetname().isEmpty()) {
                 return new BaseResponse<>(PETNAME_INPUT_ERROR);
-            } else if (signUpInfo.getPettype().isEmpty()) {
+            }
+            if (signUpInfo.getPettype().isEmpty()) {
                 return new BaseResponse<>(PETTYPE_INPUT_ERROR);
-            } else if (signUpInfo.getNickname().isEmpty()) {
+            }
+            if (signUpInfo.getNickname().isEmpty()) {
                 return new BaseResponse<>(NICKNAME_INPUT_ERROR);
-            } else if (signUpInfo.getPhone().isEmpty()) {
+            }
+            if (signUpInfo.getPhone().isEmpty()) {
                 return new BaseResponse<>(PHONE_INPUT_ERROR);
             }
 
