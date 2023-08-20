@@ -73,7 +73,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             }else{
                 sex = "여성";
             }
-            
+
 
             user = User.builder()
                     .username(oAuth2UserInfo.getProvider() + "_" + oAuth2UserInfo.getProviderId())

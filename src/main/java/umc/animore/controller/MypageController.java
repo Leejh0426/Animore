@@ -11,6 +11,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,10 @@ public class MypageController {
 
     @Autowired
     private ReservationService reservationService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
 
 
@@ -168,6 +173,7 @@ public class MypageController {
 
 
 
+
     /**
      * 와이어프레임.회원정보수정 - 비밀번호 확인 API
      */
@@ -177,9 +183,11 @@ public class MypageController {
             PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String userPassword = principalDetails.getUser().getPassword();
 
-            if (userPassword.equals(password)) {
+            if (bCryptPasswordEncoder.matches(password,userPassword)) {
+
                 return new BaseResponse<>(SUCCESS);
             }else{
+
                 throw new BaseException(GET_USER_PASSWORD_ERROR);
             }
         }
