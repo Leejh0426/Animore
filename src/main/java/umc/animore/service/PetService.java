@@ -174,8 +174,6 @@ public class PetService {
             System.out.println("여기까지 코드가 왔으면 강제에러");
             throw new BaseException(RESPONSE_ERROR);
 
-        }catch(BaseException e){
-            throw new BaseException(GET_PET_EMPTY_ERROR);
         }
 
         catch(Exception e){
