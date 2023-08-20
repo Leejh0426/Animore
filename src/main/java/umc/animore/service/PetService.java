@@ -56,7 +56,7 @@ public class PetService {
             List<Pet> pets = user.getPets();
             System.out.println(pets);
 
-            List<MypagePetUpdate> mypagePetUpdates = new ArrayList<MypagePetUpdate>();
+            List<MypagePetUpdate> mypagePetUpdates = new ArrayList<>();
 
             for (Pet pet : pets) {
                 MypagePetUpdate mypagePetUpdate = MypagePetUpdate.builder()
@@ -73,13 +73,12 @@ public class PetService {
             }
 
             if (mypagePetUpdates.size()<1) {
-                throw new BaseException(GET_PET_EMPTY_ERROR);
+                mypagePetUpdates.add(new MypagePetUpdate());
+                return mypagePetUpdates;
             }
 
             return mypagePetUpdates;
 
-        }catch(BaseException e){
-            throw new BaseException(GET_PET_EMPTY_ERROR);
         }
 
         catch(Exception e){
@@ -102,8 +101,40 @@ public class PetService {
             List<Pet> pets = user.getPets();
 
 
-            if(pets == null){
-                throw new BaseException(GET_PET_EMPTY_ERROR);
+            if(pets.isEmpty()){
+
+                Pet pet = new Pet();
+                if (mypagePetUpdate.getPetAge() != 0) {
+                    pet.setPetAge(mypagePetUpdate.getPetAge());
+                }
+                if (mypagePetUpdate.getPetName() != null) {
+                    pet.setPetName(mypagePetUpdate.getPetName());
+                }
+                if (mypagePetUpdate.getPetGender() != null) {
+                    pet.setPetGender(mypagePetUpdate.getPetGender());
+                }
+                if (mypagePetUpdate.getPetType() != null) {
+                    pet.setPetType(mypagePetUpdate.getPetType());
+                }
+                if (mypagePetUpdate.getPetSpecials() != null) {
+                    pet.setPetSpecials(mypagePetUpdate.getPetSpecials());
+                }
+                if (mypagePetUpdate.getPetWeight() != 0) {
+                    pet.setPetWeight(mypagePetUpdate.getPetWeight());
+                }
+
+                pet.setUser(user);
+                petRepository.save(pet);
+
+                return new MypagePetUpdate().builder()
+                        .petId(pet.getPetId())
+                        .petAge(pet.getPetAge())
+                        .petName(pet.getPetName())
+                        .petGender(pet.getPetGender())
+                        .petType(pet.getPetType())
+                        .petSpecials(pet.getPetSpecials())
+                        .petWeight(pet.getPetWeight())
+                        .build();
             }
 
             for (Pet pet : pets) {

@@ -66,11 +66,12 @@ public class MypageController {
     public BaseResponse<MypageHome> mypagehome(){
         try {
             PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = principalDetails.getUser();
             Long userId = principalDetails.getUser().getId();
             Pet pet = petService.findTop1ByUser_idOrderByPetId(userId);
 
             if(pet == null){
-                throw new BaseException(GET_PET_EMPTY_ERROR);
+                pet = new Pet();
             }
 
 
@@ -81,8 +82,12 @@ public class MypageController {
 
             Image img = imageService.findImageByUserId(userId);
 
+            if(img ==null){
+                img = new Image();
+            }
+
             MypageHome mypageHome = MypageHome.builder()
-                    .nickname(pet.getUser().getNickname())
+                    .nickname(user.getNickname())
                     .petName(pet.getPetName())
                     .petAge(pet.getPetAge())
                     .petType(pet.getPetType())
