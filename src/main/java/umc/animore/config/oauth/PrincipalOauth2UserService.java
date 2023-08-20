@@ -66,13 +66,22 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             userRepository.save(user);
         } else {
             // user의 패스워드가 null이기 때문에 OAuth 유저는 일반적인 로그인을 할 수 없음.
+
+            String sex;
+            if(oAuth2UserInfo.getGender().substring(0,1).equalsIgnoreCase("m")){
+                sex = "남성";
+            }else{
+                sex = "여성";
+            }
+            
+
             user = User.builder()
                     .username(oAuth2UserInfo.getProvider() + "_" + oAuth2UserInfo.getProviderId())
                     .email(oAuth2UserInfo.getEmail())
                     .role("ROLE_USER")
                     .provider(oAuth2UserInfo.getProvider())
                     .providerId(oAuth2UserInfo.getProviderId())
-                    .gender(oAuth2UserInfo.getGender())
+                    .gender(sex)
                     .build();
             userRepository.save(user);
         }
