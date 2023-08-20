@@ -46,6 +46,10 @@ public class ReservationController {
     @GetMapping("/booking/Calendar")
     public BaseResponse<?> getAvailableTimesForNextMonth(@RequestBody ReservationRequest reservationRequest) {
 
+        if (reservationRequest.getStoreId() == null) {
+            return new BaseResponse<>(NO_MATCHING_STORE);
+        }
+
         Store store = storeService.findStoreId(reservationRequest.getStoreId());
 
         Map<String, Object> response = new LinkedHashMap<>();
@@ -77,8 +81,14 @@ public class ReservationController {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
 
+        if (user.getPets() == null) {
+            return new BaseResponse<>(GET_PET_EMPTY_ERROR);
+        }
+
         if (reservationRequest.getStoreId() == null) {
-            return new BaseResponse<>(DATABASE_ERROR);
+            return new BaseResponse<>(NO_MATCHING_STORE);
+        } else if (reservationRequest.getDogSize() == null || reservationRequest.getCutStyle() == null || reservationRequest.getBathStyle() == null) {
+            return new BaseResponse<>(EMPTY_REQUEST_VALUE);
         }
         try {
             Reservation reservation = reservationService.createReservation(user.getId(), reservationRequest.getStoreId(), reservationRequest.getDogSize(), reservationRequest.getCutStyle(), reservationRequest.getBathStyle());
@@ -114,6 +124,8 @@ public class ReservationController {
 
         if (reservationId == null) {
             return new BaseResponse<>(NOT_FOUND_RESERVATION);
+        } else if (reservationRequest.getStartTime() == null) {
+            return new BaseResponse<>(SHOULD_SELECT_TIME);
         }
 
         List<Reservation> nullReservations = reservationService.findReservationWithNullStartTime(user.getId());
@@ -162,6 +174,9 @@ public class ReservationController {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
 
+        if (user == null) {
+            return new BaseResponse<>(WITHOUT_PERMISSION_USER);
+        }
 
         try {
             Map<String, Object> userinfoMap = userService.getUserInfo(user.getId());
@@ -187,6 +202,8 @@ public class ReservationController {
 
         if (reservationId == null) {
             return new BaseResponse<>(NOT_FOUND_RESERVATION);
+        } else if (reservationRequest.getStartTime() == null) {
+            return new BaseResponse<>(SHOULD_SELECT_TIME);
         }
 
         Reservation reservation = reservationService.findbyUserId(reservationId, user.getId());
@@ -272,11 +289,12 @@ public class ReservationController {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User user = principalDetails.getUser();
-        Store store = user.getStore();
 
-        if (store == null) {
-            return new BaseResponse<>(NO_MATCHING_STORE);
+        if (user.getStore() == null) {
+            return new BaseResponse<>(WITHOUT_PERMISSION_USER);
         }
+
+        Store store = user.getStore();
 
         try {
             List<Reservation> reservations = reservationService.getMonthlyReservationsByStore(store, year, month);
@@ -311,6 +329,10 @@ public class ReservationController {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
 
+        if (user.getStore() == null) {
+            return new BaseResponse<>(WITHOUT_PERMISSION_USER);
+        }
+
         try {
             Page<Reservation> reservationPage = reservationService.getRequest(user.getStore().getStoreId(), false, pageable);
             List<Reservation> reservationList = reservationPage.getContent();
@@ -344,6 +366,10 @@ public class ReservationController {
     (@PageableDefault(size = 6, page = 0, sort = "reservationId") Pageable pageable) {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
+
+        if (user.getStore() == null) {
+            return new BaseResponse<>(WITHOUT_PERMISSION_USER);
+        }
 
         try {
             Page<Reservation> reservationPage = reservationService.getRequest(user.getStore().getStoreId(), true, pageable);
@@ -407,6 +433,10 @@ public class ReservationController {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
 
+        if (user.getStore() == null) {
+            return new BaseResponse<>(WITHOUT_PERMISSION_USER);
+        }
+
         if (reservationId == null) {
             return new BaseResponse<>(NOT_FOUND_RESERVATION);
         }
@@ -431,6 +461,10 @@ public class ReservationController {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
 
+        if (user.getStore() == null) {
+            return new BaseResponse<>(WITHOUT_PERMISSION_USER);
+        }
+
         if (reservationId == null) {
             return new BaseResponse<>(NOT_FOUND_RESERVATION);
         }
@@ -452,6 +486,8 @@ public class ReservationController {
     public BaseResponse<?> reservationList(@PageableDefault(size = 6, page = 0, sort = "userId") Pageable pageable) {
         PrincipalDetails principalDetails = (PrincipalDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
+
+
 
         try {
             Page<Reservation> reservationlist = reservationService.getReservationlist(user.getId(), pageable);

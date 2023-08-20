@@ -36,9 +36,6 @@ public enum BaseResponseStatus { //열거 상수를 통해 응답상태를 나�
 
 
 
-
-
-
     //3000 : 응답 오류
     RESPONSE_ERROR(false,3000,"값을 불러오는데 실패"),
     REDIRECT_ERROR(false,3001,"리다이렉트 실패"),
@@ -48,7 +45,7 @@ public enum BaseResponseStatus { //열거 상수를 통해 응답상태를 나�
 
     SERVER_ERROR(false,4001,"서버 연결 실패"),
 
-    NO_MATCHING_STORE(false,4002,"데이터베이스에 저장된 값이 없음"),
+    NO_MATCHING_STORE(false,4002,"데이터베이스에 저장된 값이 없습니다."),
 
     //5000 : 후기작성 오류
     EMPTY_REVIEW_CONTENT(false,5000,"후기 내용 입력안함"),
@@ -66,8 +63,10 @@ public enum BaseResponseStatus { //열거 상수를 통해 응답상태를 나�
     INVALID_REQUEST_INFO(false, 6002, "잘못된 업체 정보 요청입니다."),
     NOT_MATCHED_USER(false, 6003, "일치하지 않은 유저입니다."),
     FALSE_RESERVATION(false, 6004, "예약에 실패하였습니다."),
-    NOT_FOUND_RECENT_BOOKING(false, 6005, "최근 예약을 찾을 수 없습니다"),
-    EMPTY_REQUEST_VALUE(false, 6006, "요청사항이 선택되지 않았습니다.");
+    NOT_FOUND_RECENT_BOOKING(false, 6005, "최근 예약을 찾을 수 없습니다."),
+    EMPTY_REQUEST_VALUE(false, 6006, "요청사항이 선택되지 않았습니다."),
+    WITHOUT_PERMISSION_USER(false, 6007, "권한이 없는 유저입니다."),
+    SHOULD_SELECT_TIME(false, 6008, "예약 시간을 선택해주세요.");
 
     private final boolean isSuccess;
     private final int code;
