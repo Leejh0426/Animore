@@ -20,6 +20,7 @@ import umc.animore.service.StoreService;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,8 +32,22 @@ public class StoreController {
     @Autowired
     ImageRepository imageRepository;
 
-    @PostMapping(value ="/manage/store",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BaseResponse<MypageStoreUpdate> UpdateStore(@RequestPart MypageStoreUpdate mypageStoreUpdate, @RequestPart(required = false,value = "images") MultipartFile imageFile){
+    @PostMapping("/manage/store")
+    public BaseResponse<MypageStoreUpdate> UpdateStore(  @RequestParam String storeName,
+                                                         @RequestParam String storeExplain,
+                                                         @RequestParam (required = false) String storeImageUrl,
+                                                         @RequestParam String open,
+                                                         @RequestParam String close,
+                                                         @RequestParam(required = false, value = "dayoff1") String dayoff1,
+                                                         @RequestParam(required = false, value = "dayoff2") String dayoff2,
+                                                         @RequestParam(required = false, value = "amount") String amount,
+                                                         @RequestParam(required = false, value = "storeSignificant") List<String> storeSignificant,
+                                                         @RequestParam(required = false, value = "tags") List<String> tags,
+                                                         @RequestParam String storeLocation,
+                                                         @RequestParam(required = false, value = "storeNumber") String storeNumber,
+                                                         @RequestParam(required = false, value = "latitude") double latitude,
+                                                         @RequestParam(required = false, value = "longitude") double longitude,
+                                                         @RequestPart(required = false,value = "images") MultipartFile imageFile){
         String imageUrl = null;
 
         try {
@@ -60,6 +75,11 @@ public class StoreController {
                 image.setUser(principalDetails.getUser());
                 imageRepository.save(image);
             }
+
+            MypageStoreUpdate mypageStoreUpdate = new MypageStoreUpdate(
+                    storeName, storeExplain, storeImageUrl, open, close, dayoff1, dayoff2, amount,
+                    storeSignificant, tags, storeLocation, storeNumber, latitude, longitude,0L
+            );
 
             return new BaseResponse<>(storeService.saveMypageStoreUpdate(mypageStoreUpdate, storeId, imageUrl));
 
