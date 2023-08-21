@@ -348,6 +348,7 @@ public class ReservationController {
                 reservationMap.put("petName", r.getPet_name());
                 reservationMap.put("username", r.getUsername());
                 reservationMap.put("phone", r.getUser_phone());
+                reservationMap.put("reservationId", r.getReservationId());
                 result.add(reservationMap);
             }
 
@@ -386,6 +387,7 @@ public class ReservationController {
                 reservationMap.put("petName", r.getPet_name());
                 reservationMap.put("username", r.getUsername());
                 reservationMap.put("phone", r.getUser_phone());
+                reservationMap.put("reservationId", r.getReservationId());
                 resultList.add(reservationMap);
             }
 
@@ -424,6 +426,45 @@ public class ReservationController {
        } catch (Exception e) {
            return new BaseResponse<>(DATABASE_ERROR);
        }
+    }
+
+    // 업체 예약 상세보기
+    @ResponseBody
+    @GetMapping("/manage/booking/details/{reservationId}")
+    public BaseResponse<?> reservationDetails(@PathVariable Long reservationId) {
+        PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = principalDetails.getUser();
+
+        if (user.getStore() == null) {
+            return new BaseResponse<>(WITHOUT_PERMISSION_USER);
+        }
+
+        Reservation reservation = reservationService.getRequestById(reservationId);
+
+
+        if (reservationId == null) {
+            return new BaseResponse<>(NOT_FOUND_RESERVATION);
+        } else if (reservation.getStore().getStoreId() != user.getStore().getStoreId()) {
+            return new BaseResponse<>(RESPONSE_ERROR);
+        }
+
+        try {
+            Map<String, Object> reservationMap = new HashMap<>();
+            reservationMap.put("petName", reservation.getPet_name());
+            reservationMap.put("petType", reservation.getPet_type());
+            reservationMap.put("petGender", reservation.getPet_gender());
+            reservationMap.put("username", reservation.getUsername());
+            reservationMap.put("phone", reservation.getUser_phone());
+            reservationMap.put("address", reservation.getAddress());
+            reservationMap.put("dogSize", reservation.getDogSize());
+            reservationMap.put("cutStyle", reservation.getCutStyle());
+            reservationMap.put("bathStyle", reservation.getBathStyle());
+
+            return new BaseResponse<>(reservationMap);
+
+        } catch (Exception e) {
+            return new BaseResponse<>(DATABASE_ERROR);
+        }
     }
 
     // 업체 - 예약승인
