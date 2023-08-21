@@ -77,11 +77,11 @@ public class StoreController {
             }
 
             MypageStoreUpdate mypageStoreUpdate = new MypageStoreUpdate(
-                    storeName, storeExplain, storeImageUrl, open, close, dayoff1, dayoff2, amount,
+                    storeName, storeExplain, imageUrl, open, close, dayoff1, dayoff2, amount,
                     storeSignificant, tags, storeLocation, storeNumber, latitude, longitude,0L
             );
 
-            return new BaseResponse<>(storeService.saveMypageStoreUpdate(mypageStoreUpdate, storeId, imageUrl));
+            return new BaseResponse<>(storeService.saveMypageStoreUpdate(mypageStoreUpdate, storeId));
 
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
