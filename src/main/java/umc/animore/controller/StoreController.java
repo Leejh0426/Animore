@@ -3,19 +3,23 @@ package umc.animore.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import umc.animore.config.auth.PrincipalDetails;
 import umc.animore.config.exception.BaseException;
 import umc.animore.config.exception.BaseResponse;
 import umc.animore.config.exception.BaseResponseStatus;
 import umc.animore.controller.DTO.MypageMemberUpdate;
 import umc.animore.controller.DTO.MypageStoreUpdate;
-import umc.animore.model.Store;
-import umc.animore.model.Town;
-import umc.animore.model.User;
+import umc.animore.model.*;
 import umc.animore.model.review.StoreDTO;
+import umc.animore.repository.ImageRepository;
+import umc.animore.service.ImageService;
 import umc.animore.service.StoreService;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 @RestController
 public class StoreController {
@@ -23,17 +27,44 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
 
+    @Autowired
+    ImageRepository imageRepository;
+
     @PostMapping("/manage/store")
-    public BaseResponse<MypageStoreUpdate> UpdateStore(@RequestBody MypageStoreUpdate mypageStoreUpdate){
+    public BaseResponse<MypageStoreUpdate> UpdateStore(@RequestBody MypageStoreUpdate mypageStoreUpdate, @RequestPart(required = false) MultipartFile imageFile){
+        String imageUrl = null;
 
         try {
             PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Long storeId = principalDetails.getUser().getStore().getStoreId();
 
-            return new BaseResponse<>(storeService.saveMypageStoreUpdate(mypageStoreUpdate, storeId));
+            if(imageFile != null) {
+                // 이미지 파일 저장 경로
+                String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\templates\\image\\";
+                UUID uuid = UUID.randomUUID();
+                String originalFileName = uuid + "_" + imageFile.getOriginalFilename();
+                File saveFile = new File(projectPath +originalFileName);
+
+                // 이미지 URL 정보를 리스트에 추가
+                imageUrl = "http://www.animore.co.kr/reviews/images/" + originalFileName;
+
+                imageFile.transferTo(saveFile);
+
+                // 이미지 메타데이터 DB에 저장
+                Image image = new Image();
+                image.setImgName(originalFileName);
+                image.setImgOriName(imageFile.getOriginalFilename());
+                image.setImgPath(saveFile.getAbsolutePath());
+                image.setStore(principalDetails.getUser().getStore());
+                imageRepository.save(image);
+            }
+
+            return new BaseResponse<>(storeService.saveMypageStoreUpdate(mypageStoreUpdate, storeId, imageUrl));
 
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
+        }catch (IOException e) {
+            throw new RuntimeException("이미지 저장에 실패하였습니다.", e);
         }
     }
 

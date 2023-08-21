@@ -118,6 +118,7 @@ public class ImageService {
         return images;
     }
 
+
     @Transactional
     public void saveImage(MultipartFile multipartFile, Long userId, String url) throws BaseException{
         try {
@@ -148,8 +149,6 @@ public class ImageService {
 
             destinationFile.getParentFile().mkdirs();
             multipartFile.transferTo(destinationFile);
-
-
 
 
             img.setImgName(destinationFileName);

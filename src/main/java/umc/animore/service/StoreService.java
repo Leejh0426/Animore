@@ -40,7 +40,7 @@ public class StoreService {
 
     //가게 정보 수정
     @Transactional
-    public MypageStoreUpdate saveMypageStoreUpdate(MypageStoreUpdate mypageStoreUpdate, @PathVariable Long storeId) throws BaseException {
+    public MypageStoreUpdate saveMypageStoreUpdate(MypageStoreUpdate mypageStoreUpdate, @PathVariable Long storeId, String imageUrl) throws BaseException {
 
         try {
             if (mypageStoreUpdate.getStoreName() == null) {
