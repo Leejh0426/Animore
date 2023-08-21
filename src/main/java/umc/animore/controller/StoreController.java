@@ -31,7 +31,7 @@ public class StoreController {
     ImageRepository imageRepository;
 
     @PostMapping("/manage/store")
-    public BaseResponse<MypageStoreUpdate> UpdateStore(@RequestBody MypageStoreUpdate mypageStoreUpdate, @RequestPart(required = false,value = "images") MultipartFile imageFile){
+    public BaseResponse<MypageStoreUpdate> UpdateStore(@RequestPart MypageStoreUpdate mypageStoreUpdate, @RequestPart(required = false,value = "images") MultipartFile imageFile){
         String imageUrl = null;
 
         try {
@@ -56,6 +56,7 @@ public class StoreController {
                 image.setImgOriName(imageFile.getOriginalFilename());
                 image.setImgPath(saveFile.getAbsolutePath());
                 image.setStore(principalDetails.getUser().getStore());
+                image.setUser(principalDetails.getUser());
                 imageRepository.save(image);
             }
 
