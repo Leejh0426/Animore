@@ -31,7 +31,7 @@ public class StoreController {
     ImageRepository imageRepository;
 
     @PostMapping("/manage/store")
-    public BaseResponse<MypageStoreUpdate> UpdateStore(@RequestBody MypageStoreUpdate mypageStoreUpdate, @RequestPart(required = false) MultipartFile imageFile){
+    public BaseResponse<MypageStoreUpdate> UpdateStore(@RequestBody MypageStoreUpdate mypageStoreUpdate, @RequestPart(required = false,value = "images") MultipartFile imageFile){
         String imageUrl = null;
 
         try {
