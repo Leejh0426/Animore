@@ -1,6 +1,7 @@
 package umc.animore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +31,7 @@ public class StoreController {
     @Autowired
     ImageRepository imageRepository;
 
-    @PostMapping("/manage/store")
+    @PostMapping(value ="/manage/store",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse<MypageStoreUpdate> UpdateStore(@RequestPart MypageStoreUpdate mypageStoreUpdate, @RequestPart(required = false,value = "images") MultipartFile imageFile){
         String imageUrl = null;
 
