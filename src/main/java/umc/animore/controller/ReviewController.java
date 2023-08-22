@@ -284,7 +284,7 @@ public class ReviewController {
             // 리뷰 정보 업데이트
             review.setReviewContent(reviewDTO.getReviewContent());
             review.setReviewLike(reviewDTO.getReviewLike());
-            review.setPetId(reviewDTO.getPetId());
+            review.setPetId(review.getPetId());
 
             // 기존 이미지들 삭제
             imageService.deleteImagesByReviewId(reviewId);
@@ -393,9 +393,6 @@ public class ReviewController {
             }
             if (reviewDTO.getReviewLike() != null) {
                 review.setReviewLike(reviewDTO.getReviewLike());
-            }
-            if (reviewDTO.getPetId() != null) {
-                review.setPetId(reviewDTO.getPetId());
             }
 
             // 이미지를 부분적으로 수정
