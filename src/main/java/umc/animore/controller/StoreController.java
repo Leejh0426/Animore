@@ -75,6 +75,7 @@ public class StoreController {
                     existingImage.setImgOriName(imageFile.getOriginalFilename());
                     existingImage.setImgPath(saveFile.getAbsolutePath());
                     imageRepository.save(existingImage);
+                    imageUrl="http://www.animore.co.kr/reviews/images/" + existingImage.getImgName();
                 } else {
                     // 새로운 이미지 저장
                     Image image = new Image();
