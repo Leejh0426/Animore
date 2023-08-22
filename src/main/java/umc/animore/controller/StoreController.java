@@ -48,7 +48,7 @@ public class StoreController {
                                                          @RequestParam(required = false, value = "latitude") double latitude,
                                                          @RequestParam(required = false, value = "longitude") double longitude,
                                                          @RequestPart(required = false,value = "images") MultipartFile imageFile){
-        String imageUrl = null;
+        String imageUrl = storeImageUrl;
 
         try {
             // 현재 사용자의 정보를 가져옴
