@@ -61,6 +61,9 @@ public class ReviewController {
     @Autowired
     private final ReviewImageRepository reviewImageRepository;
 
+    @Autowired
+    PetRepository petRepository;
+
     private static final String BASE_PATH = "/var/www/animore.co.kr/";
 
     public ReviewController(ReviewService reviewService, ImageService imageService, StoreService storeService,
@@ -81,15 +84,11 @@ public class ReviewController {
     //http://localhost:8000/reviews/create?storeId=4&userId=1
     @ResponseBody
     @PostMapping("/reviews/create")
-    public BaseResponse<ReviewDTO> createReview(@RequestParam Long storeId, @RequestParam Long petId, @RequestParam String reviewContent,
+    public BaseResponse<ReviewDTO> createReview( @RequestParam String reviewContent, @RequestParam Long storeId,
                                                 @RequestParam Double reviewLike, @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         // 이미지 개수 체크
         if (images != null && images.size() > 3) {
             return new BaseResponse<>(false, "이미지는 최대 3개까지만 등록할 수 있습니다.", 6000, null);
-        }
-
-        if (petId == null || petId.equals("")) {
-            return new BaseResponse<>(EMPTY_PET_ID);
         }
 
         if (reviewContent == null || reviewContent.equals("")) {
@@ -116,16 +115,17 @@ public class ReviewController {
 
             // 해당 가게와 사용자에 대한 예약 정보 가져오기
             Reservation reservation = reservationRepository.findByUserAndStoreAndConfirmed(user, store, true);
+            Pet pet = petRepository.findByUser_id(userId);
 
             if (reservation==null){
                 return new BaseResponse<>(BaseResponseStatus.NOT_FOUND_RESERVATION);
             }
 
-            review.setPetId(petId);
+            review.setPetId(pet.getPetId());
             review.setReviewContent(reviewContent);
             review.setReviewLike(reviewLike);
             review.setUser(user);
-            review.setStore(store);
+            review.setStore(reservation.getStore());
 
             // 리뷰 생성
             Review createdReview = reviewService.createReview(review, store, user);
