@@ -48,7 +48,7 @@ public class StoreController {
                                                          @RequestParam(required = false, value = "latitude") double latitude,
                                                          @RequestParam(required = false, value = "longitude") double longitude,
                                                          @RequestPart(required = false,value = "images") MultipartFile imageFile){
-        String imageUrl = storeImageUrl;
+        String imageUrl = null;
 
         try {
             // 현재 사용자의 정보를 가져옴
@@ -75,7 +75,7 @@ public class StoreController {
                     existingImage.setImgOriName(imageFile.getOriginalFilename());
                     existingImage.setImgPath(saveFile.getAbsolutePath());
                     imageRepository.save(existingImage);
-                    imageUrl="http://www.animore.co.kr/reviews/images/" + existingImage.getImgName();
+
                 } else {
                     // 새로운 이미지 저장
                     Image image = new Image();
@@ -85,6 +85,11 @@ public class StoreController {
                     image.setStore(principalDetails.getUser().getStore());
                     imageRepository.save(image);
                 }
+            } else {
+                if (existingImage!=null){
+                    imageUrl="http://www.animore.co.kr/reviews/images/" + existingImage.getImgName();
+                }
+
             }
 
             MypageStoreUpdate mypageStoreUpdate = new MypageStoreUpdate(
