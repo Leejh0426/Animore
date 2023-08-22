@@ -51,8 +51,12 @@ public class StoreController {
         String imageUrl = null;
 
         try {
+            // 현재 사용자의 정보를 가져옴
             PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Long storeId = principalDetails.getUser().getStore().getStoreId();
+
+            // 이미지가 이미 존재하는지 확인
+            Image existingImage = imageRepository.findByStoreId(storeId);
 
             if(imageFile != null) {
                 // 이미지 파일 저장 경로
@@ -63,17 +67,23 @@ public class StoreController {
 
                 // 이미지 URL 정보를 리스트에 추가
                 imageUrl = "http://www.animore.co.kr/reviews/images/" + originalFileName;
-
                 imageFile.transferTo(saveFile);
 
-                // 이미지 메타데이터 DB에 저장
-                Image image = new Image();
-                image.setImgName(originalFileName);
-                image.setImgOriName(imageFile.getOriginalFilename());
-                image.setImgPath(saveFile.getAbsolutePath());
-                image.setStore(principalDetails.getUser().getStore());
-                image.setUser(principalDetails.getUser());
-                imageRepository.save(image);
+                if (existingImage != null) {
+                    // 기존 이미지 업데이트
+                    existingImage.setImgName(originalFileName);
+                    existingImage.setImgOriName(imageFile.getOriginalFilename());
+                    existingImage.setImgPath(saveFile.getAbsolutePath());
+                    imageRepository.save(existingImage);
+                } else {
+                    // 새로운 이미지 저장
+                    Image image = new Image();
+                    image.setImgName(originalFileName);
+                    image.setImgOriName(imageFile.getOriginalFilename());
+                    image.setImgPath(saveFile.getAbsolutePath());
+                    image.setStore(principalDetails.getUser().getStore());
+                    imageRepository.save(image);
+                }
             }
 
             MypageStoreUpdate mypageStoreUpdate = new MypageStoreUpdate(
