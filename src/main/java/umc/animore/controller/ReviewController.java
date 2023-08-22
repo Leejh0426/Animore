@@ -137,7 +137,7 @@ public class ReviewController {
                     ReviewImage image = new ReviewImage();
                     image.setReview(createdReview); // 리뷰와 연결
 
-                    List<ReviewImage> savedImages = imageService.saveImages(images, createdReview.getReviewId());
+                    List<ReviewImage> savedImages = imageService.saveImages(Collections.singletonList(imageFile), createdReview.getReviewId());
                     createdReview.getImages().addAll(savedImages);
                 }
             }
