@@ -339,6 +339,9 @@ public class ReservationController {
 
             List<Map<String, Object>> result = new ArrayList<>();
             for (Reservation r : reservationList) {
+                if (r.getStartTime() == null) {
+                    continue;
+                }
                 Map<String, Object> reservationMap = new LinkedHashMap<>();
                 DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
                 String dateString = r.getStartTime().format(formatter);
@@ -378,6 +381,9 @@ public class ReservationController {
 
             List<Map<String, Object>> resultList = new ArrayList<>();
             for (Reservation r : reservationList) {
+                if (r.getStartTime() == null) {
+                    continue;
+                }
                 Map<String, Object> reservationMap = new LinkedHashMap<>();
                 DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
                 String dateString = r.getStartTime().format(formatter);
