@@ -475,7 +475,7 @@ public class ReservationController {
 
     // 업체 - 예약승인
     @ResponseBody
-    @GetMapping("/manage/bookings/confirm/{reservationId}")
+    @PutMapping("/manage/bookings/confirm/{reservationId}")
     public BaseResponse<?> confirmedReservation(@PathVariable Long reservationId) {
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principalDetails.getUser();
@@ -502,7 +502,7 @@ public class ReservationController {
 
     // 업체 - 예약반려
     @ResponseBody
-    @GetMapping("/manage/bookings/reject/{reservationId}")
+    @PutMapping("/manage/bookings/reject/{reservationId}")
     public BaseResponse<?> rejectReservation(@PathVariable Long reservationId, @RequestBody ReservationRequest reservationRequest) {
 
         PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
