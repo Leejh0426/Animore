@@ -21,6 +21,7 @@ import static umc.animore.config.exception.BaseResponseStatus.*;
 
 
 @RestController
+@RequestMapping("/api")
 public class SearchController {
 
 

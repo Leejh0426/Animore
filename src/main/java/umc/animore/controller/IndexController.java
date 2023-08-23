@@ -24,7 +24,9 @@ import java.io.IOException;
 import static umc.animore.config.exception.BaseResponseStatus.*;
 
 
+
 @Controller
+@RequestMapping("/api")
 public class IndexController {
 
 
@@ -39,7 +41,7 @@ public class IndexController {
     private PetService petService;
 
 
-    @GetMapping("/api/loginoauth")
+    @GetMapping("/loginoauth")
     public String Oauth(@RequestParam("firm") String firm) {
 
         System.out.println("-----------------------------------------");

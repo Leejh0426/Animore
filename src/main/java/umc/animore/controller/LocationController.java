@@ -12,7 +12,7 @@ import java.util.Optional;
 import static umc.animore.config.exception.BaseResponseStatus.EMPTY_PET_ID;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class LocationController {
     private final LocationRepository locationRepository;
 

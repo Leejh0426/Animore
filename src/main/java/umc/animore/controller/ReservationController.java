@@ -29,6 +29,7 @@ import java.util.*;
 import static umc.animore.config.exception.BaseResponseStatus.*;
 
 @Controller
+@RequestMapping("/api")
 public class ReservationController {
 
     @Autowired

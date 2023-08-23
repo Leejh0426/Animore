@@ -44,6 +44,7 @@ import java.util.*;
 import static umc.animore.config.exception.BaseResponseStatus.*;
 
 @RestController
+@RequestMapping("/api")
 public class MypageController {
 
     @Autowired
