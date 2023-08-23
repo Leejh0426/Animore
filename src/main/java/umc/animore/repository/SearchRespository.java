@@ -61,8 +61,13 @@ public interface SearchRespository extends JpaRepository<Store, Long> {
     List<Store> findStoresWithMostReviews();
 
     //예약이 가장 많은 순의 가게
-    @Query("SELECT r.store FROM Reservation r WHERE r.confirmed = true GROUP BY r.store ORDER BY COUNT(r) DESC")
-    List<Store> findStoresWithMostReservations();
+    @Query("SELECT r.store FROM Reservation r " +
+            "JOIN r.store.town t " +
+            "WHERE t IN :town AND r.confirmed = true " +
+            "GROUP BY r.store " +
+            "ORDER BY COUNT(r) DESC")
+    List<Store> findStoresWithMostReservationsInTown(Town town);
+
 
     //해시태그 인기순
     List<Store> findByTagsInOrderByStoreLikeDesc(List<String> tags);

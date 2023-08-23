@@ -440,9 +440,14 @@ public class SearchService {
 
 
     //예약 많은 순
-    public List<Store> searchReservationMost() throws BaseException {
+    public List<Store> searchReservationMost(String city,String district) throws BaseException {
         try{
-            List<Store> store = searchRespository.findStoresWithMostReservations();
+            Optional<Town> townOptional = townRepository.findByCityContainingAndDistrict(city, district);
+            if (!townOptional.isPresent()) {
+                return new ArrayList<>();  // 도시와 관련된 동네가 없을 경우 빈 리스트 반환
+            }
+            Town town = townOptional.get();
+            List<Store> store = searchRespository.findStoresWithMostReservationsInTown(town);
             return store;
         }catch (Exception exception){
             throw new BaseException(RESPONSE_ERROR);

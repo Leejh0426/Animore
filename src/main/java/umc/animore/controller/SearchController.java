@@ -613,7 +613,17 @@ public class SearchController {
     @GetMapping("/search/top_reservation")
     public BaseResponse<List<StoreDTO>> searchTopreservation() {
         try {
-            List<Store> store = searchService.searchReservationMost();
+            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String userAddress = principalDetails.getUser().getAddress();
+            String[] addressParts = userAddress.split(" ");
+            String city = addressParts[0];      // 부산시
+            String district = addressParts[1];  // 남구
+            List<Store> store = searchService.searchReservationMost(city,district);
+
+            if (store.isEmpty()){
+                return new BaseResponse<>(NO_MATCHING_STORE);
+            }
+
             List<StoreDTO> resultStore = convertStoreToDTO(store);
 
             return new BaseResponse<>(resultStore);
