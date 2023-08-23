@@ -39,7 +39,7 @@ public class IndexController {
     private PetService petService;
 
 
-    @GetMapping("/loginoauth")
+    @GetMapping("/api/loginoauth")
     public String Oauth(@RequestParam("firm") String firm) {
 
         System.out.println("-----------------------------------------");
