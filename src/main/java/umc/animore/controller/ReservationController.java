@@ -339,6 +339,7 @@ public class ReservationController {
 
             List<Map<String, Object>> result = new ArrayList<>();
             for (Reservation r : reservationList) {
+                User nickname = userService.getUserId(r.getUser().getId());
                 if (r.getStartTime() == null) {
                     continue;
                 }
@@ -349,7 +350,7 @@ public class ReservationController {
                 String formattedDate = dateTime.format(DateTimeFormatter.ofPattern("MM.dd.HH:mm"));
                 reservationMap.put("startTime", formattedDate);
                 reservationMap.put("petName", r.getPet_name());
-                reservationMap.put("username", r.getUsername());
+                reservationMap.put("nickname", nickname.getNickname());
                 reservationMap.put("phone", r.getUser_phone());
                 reservationMap.put("reservationId", r.getReservationId());
                 result.add(reservationMap);
@@ -381,6 +382,7 @@ public class ReservationController {
 
             List<Map<String, Object>> resultList = new ArrayList<>();
             for (Reservation r : reservationList) {
+                User nickname = userService.getUserId(r.getUser().getId());
                 if (r.getStartTime() == null) {
                     continue;
                 }
@@ -391,7 +393,7 @@ public class ReservationController {
                 String formattedDate = dateTime.format(DateTimeFormatter.ofPattern("MM.dd.HH:mm"));
                 reservationMap.put("startTime", formattedDate);
                 reservationMap.put("petName", r.getPet_name());
-                reservationMap.put("username", r.getUsername());
+                reservationMap.put("nickname", nickname.getNickname());
                 reservationMap.put("phone", r.getUser_phone());
                 reservationMap.put("reservationId", r.getReservationId());
                 resultList.add(reservationMap);
