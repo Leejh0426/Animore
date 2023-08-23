@@ -70,9 +70,12 @@ public class SecurityConfig  {
 
 
         http.authorizeRequests()
-                .antMatchers("/api/v1/user/**").access("hasRole('USER') or hasRole('MANAGER') or hasRole('ADMIN')")
-                .antMatchers("/api/v1/manager/**").access("hasRole('MANAGER') or hasRole('ADMIN')")
-                .antMatchers("/api/v1/admin/**").access("hasRole('ADMIN')")
+                .antMatchers("/manage/**").access("hasRole('MANAGER')")
+                .antMatchers("/my/**").access("hasRole('USER')")
+                .antMatchers("/reviews/**").access("hasRole('USER')")
+                .antMatchers("/mypage/**").access("hasRole('USER')")
+                .antMatchers("/mypage/**").access("hasRole('USER') or hasRole('MANAGER')")
+                .antMatchers("/search/**").access("hasRole('USER') or hasRole('MANAGER')")
                 .antMatchers("/user/**").authenticated()
                 .antMatchers("/manager/**").access("hasRole('MANAGER') or hasRole('ADMIN')")
                 .antMatchers("/admin/**").hasRole("ADMIN")

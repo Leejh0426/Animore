@@ -38,12 +38,32 @@ public class IndexController {
     @Autowired
     private PetService petService;
 
+
+    @GetMapping("/oauth/{firm}")
+    public String Oauth(@RequestParam("firm") String firm) {
+
+        if (firm == "google") {
+            return "redirect:https://animore.co.kr/oauth2/authorization/google";
+        }
+        else if (firm == "naver") {
+            return "redirect:https://animore.co.kr/oauth2/authorization/naver";
+        }
+        else if (firm == "kakao") {
+            return "redirect:https://animore.co.kr/oauth2/authorization/kakao";
+        }
+        else if (firm == "facebook") {
+            return "redirect:https://animore.co.kr/oauth2/authorization/facebook";
+        }
+
+        return null;
+    }
+
+
     @GetMapping("/")
     @ResponseBody
     public BaseResponse<String> Oauthreturn(@RequestParam String token){
         return new BaseResponse<>(token);
     }
-
 
     @PostMapping("/join")
     @ResponseBody
