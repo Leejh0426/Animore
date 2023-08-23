@@ -63,7 +63,7 @@ public class SecurityConfig  {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //세션을 쓰지 않겠다
                         .and()
-                        //.addFilter(corsFilter)   // CrossOrgin문제를 인증이필요한 주소든 아니든 전부다 해결해준다  /  @CrossOrgin은 인증(X)만 해결해준다
+                        .addFilter(corsFilter)   // CrossOrgin문제를 인증이필요한 주소든 아니든 전부다 해결해준다  /  @CrossOrgin은 인증(X)만 해결해준다
                         .formLogin().disable()   // formLogin을 쓰지 않겠다.
                         .httpBasic().disable()   //http 기본인증방식을 쓰지않겠다 (basic방식 : id/pw를 https주소를 이요해서 암호화해서 보내줌  // 우리는 Bearer방식으로 Token(jwt)를 쓸꺼니깐!
                         .apply(new MyCustomDsl());
