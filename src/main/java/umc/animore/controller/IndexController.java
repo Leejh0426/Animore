@@ -39,7 +39,7 @@ public class IndexController {
     private PetService petService;
 
 
-    @GetMapping("/oauth/{firm}")
+    @GetMapping("/oauth")
     public String Oauth(@RequestParam("firm") String firm) {
 
         if (firm == "google") {
