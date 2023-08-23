@@ -1359,6 +1359,7 @@ public class SearchController {
             return new BaseResponse<>(resultStore);
 
         } catch (BaseException exception) {
+            System.out.println("========================================");
             return new BaseResponse<>(exception.getStatus());
         }
     }
