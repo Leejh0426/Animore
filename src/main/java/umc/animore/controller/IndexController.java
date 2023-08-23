@@ -166,7 +166,7 @@ public class IndexController {
     }
 
 
-    @GetMapping("/jenkins")
+    @GetMapping("/api/jenkins")
     @ResponseBody
     public String jenkinstest() {
         return "jenkins test";

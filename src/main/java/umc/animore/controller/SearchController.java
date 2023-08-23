@@ -1297,9 +1297,11 @@ public class SearchController {
                 return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
             }
 
+//            PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            Long userId = principalDetails.getUser().getId();
+//            User user = userRepository.findById(userId);
             PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Long userId = principalDetails.getUser().getId();
-            User user = userRepository.findById(userId);
+            User user = principalDetails.getUser();
             List<Store> store = new ArrayList<>();
 
             // query 파라미터 값을 파싱하여 각각의 조건에 따라 처리
