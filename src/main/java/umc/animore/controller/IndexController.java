@@ -39,19 +39,21 @@ public class IndexController {
     private PetService petService;
 
 
-    @GetMapping("/user/loginoauth")
+    @GetMapping("/loginoauth")
     public String Oauth(@RequestParam("firm") String firm) {
 
-        if (firm == "google") {
+        System.out.println("-----------------------------------------");
+        if (firm.equalsIgnoreCase("google")) {
             return "redirect:https://animore.co.kr/oauth2/authorization/google";
         }
-        else if (firm == "naver") {
+        else if (firm.equalsIgnoreCase("naver")) {
             return "redirect:https://animore.co.kr/oauth2/authorization/naver";
         }
-        else if (firm == "kakao") {
+        else if (firm.equalsIgnoreCase("kakao")) {
+            System.out.println("2222222222222222222222222222");
             return "redirect:https://animore.co.kr/oauth2/authorization/kakao";
         }
-        else if (firm == "facebook") {
+        else if (firm.equalsIgnoreCase("facebook")) {
             return "redirect:https://animore.co.kr/oauth2/authorization/facebook";
         }
 

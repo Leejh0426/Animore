@@ -73,13 +73,13 @@ public class SecurityConfig  {
                 .antMatchers("/manage/**").access("hasRole('MANAGER')")
                 .antMatchers("/my/**").access("hasRole('USER')")
                 .antMatchers("/reviews/**").access("hasRole('USER')")
-                .antMatchers("/mypage/**").access("hasRole('USER')")
                 .antMatchers("/mypage/**").access("hasRole('USER') or hasRole('MANAGER')")
                 .antMatchers("/search/**").access("hasRole('USER') or hasRole('MANAGER')")
                 .antMatchers("/user/**").authenticated()
                 .antMatchers("/manager/**").access("hasRole('MANAGER') or hasRole('ADMIN')")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/manger/**").hasRole("MANAGER")
+                .antMatchers("/loginoauth/**").permitAll()
                 .anyRequest().permitAll()
                 .and()					//추가
                 .oauth2Login()				// OAuth2기반의 로그인인 경우
