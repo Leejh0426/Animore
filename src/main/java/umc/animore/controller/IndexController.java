@@ -40,7 +40,7 @@ public class IndexController {
     @Autowired
     private PetService petService;
 
-
+/*
     @GetMapping("/loginoauth")
     public String Oauth(@RequestParam("firm") String firm) {
 
@@ -61,6 +61,8 @@ public class IndexController {
 
         return null;
     }
+
+ */
 
 
     @GetMapping("/")
