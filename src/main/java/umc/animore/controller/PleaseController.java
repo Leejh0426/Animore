@@ -2,10 +2,7 @@ package umc.animore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import umc.animore.config.auth.PrincipalDetails;
 import umc.animore.config.exception.BaseException;
 import umc.animore.config.exception.BaseResponse;
@@ -21,6 +18,7 @@ import java.util.*;
 
 import static umc.animore.config.exception.BaseResponseStatus.*;
 
+@RequestMapping("/api")
 @RestController
 public class PleaseController {
 
