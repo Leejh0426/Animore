@@ -1374,5 +1374,35 @@ public class SearchController {
     }
 
 
+
+    @ResponseBody
+    @GetMapping("/main/search")
+    public BaseResponse<List<StoreDTO>> searchMainByTown(@RequestParam("city") String city, @RequestParam("district") String district) {
+        try {
+            if (district == null || district.equals("") || city == null || city.equals("")) {
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+            if (district.length() > 50 || city.length() > 50) {
+                return new BaseResponse<>(GET_SEARCH_INVALID_QUERY1);
+            }
+
+            List<Store> store = searchService.searchCityList(city,district);
+
+            System.out.println("query: " + city + " " + district);
+            System.out.println("가게정보: " + store);
+
+            if (store.isEmpty()) {
+                return new BaseResponse<>(DATABASE_ERROR);
+            }
+
+            List<StoreDTO> resultStore = convertStoreToDTO(store);
+
+            return new BaseResponse<>(resultStore);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
 }
 
